@@ -1,4 +1,4 @@
-package logo
+package color
 
 // Wrap returns colored ascii text .Now it only use cyan color but you can change it
 func Wrap(s string) string {

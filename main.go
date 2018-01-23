@@ -1,7 +1,9 @@
 package main
 
 import (
-	"github.com/git-cli/logo"
+	"github.com/urvil38/git-cli/questions"
+	"gopkg.in/AlecAivazis/survey.v1"
+	"github.com/urvil38/git-cli/color"
 	"fmt"
 )
 
@@ -15,5 +17,14 @@ var gitlogo = `
 `
 
 func main() {
-	fmt.Print(logo.Wrap(gitlogo))
+	fmt.Println(color.Wrap(gitlogo))
+	answer := struct {
+		ServiceName string `survey:"servicename"`
+	}{}
+
+	err := survey.Ask(questions.ServiceNameQuestion,&answer)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }
