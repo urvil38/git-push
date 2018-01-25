@@ -32,9 +32,10 @@ func init() {
 	configFolder = home + separator + ".config" + separator + "git-push"
 	createDir()
 	checkUserInfo()
-	remoteExists, err = utils.CheckRemoteRepo()
-	if err != nil {
-		return
+	remoteExists, _ = utils.CheckRemoteRepo()
+	if remoteExists {
+		fmt.Println(color.Wrap("Sorry, this tool will not help you because working repository is already on github or bitbucket!","FgRed","Bold"))
+		os.Exit(0)
 	}
 }
 
