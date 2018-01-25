@@ -1,0 +1,4 @@
+node_modules
+*.gem
+*.rbc
+encoding/

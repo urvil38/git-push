@@ -2,13 +2,17 @@ package types
 
 type Answer struct {
 	ServiceName string `survey:"servicename"`
-	User
 	Repo
 }
 
 type User struct {
 	Username string `survey:"username"`
 	Password string `survey:"password"`
+}
+
+type BasicUserInfo struct {
+	Name string `survey:"name"`
+	Email string `survey:"email"`
 }
 
 type Repo struct {

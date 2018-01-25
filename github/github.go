@@ -5,35 +5,55 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 
-	"github.com/urvil38/git-cli/color"
-	"github.com/urvil38/git-cli/encoding"
-
 	"github.com/google/go-github/github"
-	"github.com/urvil38/git-cli/questions"
-	"github.com/urvil38/git-cli/types"
+	"github.com/urvil38/git-push/color"
+	"github.com/urvil38/git-push/encoding"
+	"github.com/urvil38/git-push/questions"
+	"github.com/urvil38/git-push/types"
 	"gopkg.in/AlecAivazis/survey.v1"
 )
 
 func init() {
-	Home = os.Getenv("HOME")
+	home = os.Getenv("HOME")
+	configFilePath = home + separator + ".config" + separator + "git-push" + separator + "git-push-github"
+	checkCredential()
+}
+
+func checkCredential() {
+	b, err := ioutil.ReadFile(configFilePath)
+	if err != nil {
+		return
+	}
+	b = encoding.Decode(string(b))
+	credentials := strings.Split(string(b), "\n")
+	GithubUser.Username = credentials[0]
+	GithubUser.Password = credentials[1]
 }
 
 var (
-	Home   string
-	client *github.Client
-	GitURL types.RepoURL
+	home           string
+	client         *github.Client
+	configFilePath string
+	GitURL         types.RepoURL
+	GithubUser     types.User
+)
+
+const (
+	separator = string(filepath.Separator)
 )
 
 //Init function ask for github username and password for basic auth
 func Init(answer *types.Answer) error {
-	if answer.User.Username != "" || answer.User.Password != "" {
+	if GithubUser.Username != "" || GithubUser.Password != "" {
 		fmt.Println(color.Wrap("=> You authenticated successfully", "FgGreen", "CrossedOut"))
 		return nil
 	}
-	err := survey.Ask(questions.GithubCredential, &answer.User)
+	err := survey.Ask(questions.GithubCredential, &GithubUser)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -47,8 +67,8 @@ func Init(answer *types.Answer) error {
 
 func authenticateUser(answer *types.Answer) error {
 	tp := github.BasicAuthTransport{
-		Username: answer.User.Username,
-		Password: answer.User.Password,
+		Username: GithubUser.Username,
+		Password: GithubUser.Password,
 	}
 	client = github.NewClient(tp.Client())
 	ctx := context.Background()
@@ -58,13 +78,12 @@ func authenticateUser(answer *types.Answer) error {
 	}
 
 	fmt.Println(color.Wrap("=> You authenticated successfully", "FgGreen", "CrossedOut"))
-
-	f, err := os.Create(Home + "/.config/git-cli/git-cli")
+	f, err := os.Create(configFilePath)
 	defer f.Close()
 
 	b := new(bytes.Buffer)
-	b.WriteString(answer.Username + "\n")
-	b.WriteString(answer.Password)
+	b.WriteString(GithubUser.Username + "\n")
+	b.WriteString(GithubUser.Password)
 
 	sEnc := encoding.Encode(b.Bytes())
 
@@ -78,8 +97,8 @@ func authenticateUser(answer *types.Answer) error {
 
 func CreateRepo(answer *types.Answer) error {
 	tp := github.BasicAuthTransport{
-		Username: answer.Username,
-		Password: answer.Password,
+		Username: GithubUser.Username,
+		Password: GithubUser.Password,
 	}
 	client := github.NewClient(tp.Client())
 	ctx := context.Background()
@@ -91,7 +110,7 @@ func CreateRepo(answer *types.Answer) error {
 	repository, response, err := client.Repositories.Create(ctx, "", repo)
 	if err != nil {
 		if response != nil && response.StatusCode == 422 {
-			return errors.New("Error: " + "Same name of repository is exists on your account")
+			return err//errors.New("Error: " + "Same name of repository is exists on your account")
 		}
 		return errors.New("Error while creating repository")
 	}

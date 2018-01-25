@@ -1,28 +1,29 @@
 package questions
 
 import (
+	"github.com/urvil38/git-push/utils"
 	"gopkg.in/AlecAivazis/survey.v1"
-	"github.com/urvil38/git-cli/lib"
 )
 
-//ServiceNameQuestion defindes question for servicename
+//ServiceName defindes question for servicename
 var ServiceName = []*survey.Question{
 	{
 		Name: "servicename",
 		Prompt: &survey.Select{
 			Message: "Pleasse select a service you want to use:",
-			Options: []string{"Github","Bitbucket"},
+			Options: []string{"Github"},
 			Default: "Github",
 		},
 	},
 }
+
 //GithubCredential ask for username and password for basic auth
 var GithubCredential = []*survey.Question{
 	{
 		Name: "username",
 		Prompt: &survey.Input{
 			Message: "Enter your username or Email:",
-			Help: "Please give your github username or email address",
+			Help:    "Please give your github username or email address",
 		},
 		Validate: survey.Required,
 	},
@@ -35,12 +36,31 @@ var GithubCredential = []*survey.Question{
 	},
 }
 
+var UserInfo = []*survey.Question{
+	{
+		Name: "name",
+		Prompt: &survey.Input{
+			Message: "Enter Your name:",
+			Help:    "Please give your name for configure git commit",
+		},
+		Validate: survey.Required,
+	},
+	{
+		Name: "email",
+		Prompt: &survey.Input{
+			Message: "Enter your Email:",
+			Help:    "Please give your email for configure git commit",
+		},
+		Validate: survey.Required,
+	},
+}
+
 var GithubRepoInfo = []*survey.Question{
 	{
 		Name: "reponame",
 		Prompt: &survey.Input{
 			Message: "Enter name of the repository:",
-			Default: lib.GetCurrentWorkingDirName(),
+			Default: utils.GetCurrentWorkingDirName(),
 		},
 		Validate: survey.Required,
 	},
@@ -54,7 +74,7 @@ var GithubRepoInfo = []*survey.Question{
 		Name: "repotype",
 		Prompt: &survey.Select{
 			Message: "Public or Private:",
-			Options: []string{"Public","Private"},
+			Options: []string{"Public", "Private"},
 			Default: "Public",
 		},
 	},
@@ -73,9 +93,9 @@ var CreateGitIgnore = []*survey.Question{
 	{
 		Name: "gitignorefile",
 		Prompt: &survey.Editor{
-			Message: "Please add files you want to ignore for git",
-			Default: "node_modules\n*.gem\n*.rbc",
-			HideDefault: true,
+			Message:       "Please add files you want to ignore for git",
+			Default:       "node_modules\n*.gem\n*.rbc",
+			HideDefault:   true,
 			AppendDefault: true,
 		},
 	},
