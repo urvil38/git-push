@@ -7,4 +7,8 @@ $ go get github.com/urvil38/git-push
 $ go install
 $ go build
 ```
+move binary file to bin directory you might need root accress for that:
+```
+$ mv git-cli /usr/local/bin
+```
 
