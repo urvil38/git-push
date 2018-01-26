@@ -7,7 +7,9 @@ $ go get github.com/urvil38/git-push
 $ go install
 $ go build
 ```
-move binary file to bin directory you might need root accress for that:
+move binary file to bin directory :
+
+>Typically these commands must be run as root or through sudo.
 ```
 $ mv git-cli /usr/local/bin
 ```
