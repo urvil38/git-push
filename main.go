@@ -86,7 +86,7 @@ func main() {
 			fmt.Println(err)
 			return
 		}
-		err = ioutil.WriteFile(userConfigFile, []byte(basicUserInfo.Name+"\n"+basicUserInfo.Email), 0777)
+		err = ioutil.WriteFile(userConfigFile, []byte(basicUserInfo.Name+"\n"+basicUserInfo.Email), 0555)
 		if err != nil {
 			return
 		}
@@ -108,16 +108,16 @@ func main() {
 
 	switch service := answer.ServiceName; service {
 	case "Github":
-		err := github.Init(&answer)
+		err := github.Init(answer)
 		checkerror(err)
 
-		err = github.CreateRepo(&answer)
+		err = github.CreateRepo(answer)
 		checkerror(err)
 
 		err = git.CreateGitIgnoreFile()
 		checkerror(err)
 
-		err = git.PushRepo(&github.GitURL, &github.GithubUser, &basicUserInfo)
+		err = git.PushRepo(github.GitURL, github.GithubUser, basicUserInfo)
 		checkerror(err)
 	}
 }

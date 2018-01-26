@@ -48,7 +48,7 @@ const (
 )
 
 //Init function ask for github username and password for basic auth
-func Init(answer *types.Answer) error {
+func Init(answer types.Answer) error {
 	if GithubUser.Username != "" || GithubUser.Password != "" {
 		fmt.Println(color.Wrap("=> You authenticated successfully", "FgGreen", "CrossedOut"))
 		return nil
@@ -65,7 +65,7 @@ func Init(answer *types.Answer) error {
 	return nil
 }
 
-func authenticateUser(answer *types.Answer) error {
+func authenticateUser(answer types.Answer) error {
 	tp := github.BasicAuthTransport{
 		Username: GithubUser.Username,
 		Password: GithubUser.Password,
@@ -78,16 +78,14 @@ func authenticateUser(answer *types.Answer) error {
 	}
 
 	fmt.Println(color.Wrap("=> You authenticated successfully", "FgGreen", "CrossedOut"))
-	f, err := os.Create(configFilePath)
-	defer f.Close()
-
+	
 	b := new(bytes.Buffer)
 	b.WriteString(GithubUser.Username + "\n")
 	b.WriteString(GithubUser.Password)
-
+	
 	sEnc := encoding.Encode(b.Bytes())
-
-	_, err = f.Write([]byte(sEnc))
+	
+	err = ioutil.WriteFile(configFilePath,[]byte(sEnc),0555)
 	if err != nil {
 		return err
 	}
@@ -95,7 +93,7 @@ func authenticateUser(answer *types.Answer) error {
 	return nil
 }
 
-func CreateRepo(answer *types.Answer) error {
+func CreateRepo(answer types.Answer) error {
 	tp := github.BasicAuthTransport{
 		Username: GithubUser.Username,
 		Password: GithubUser.Password,
@@ -110,9 +108,9 @@ func CreateRepo(answer *types.Answer) error {
 	repository, response, err := client.Repositories.Create(ctx, "", repo)
 	if err != nil {
 		if response != nil && response.StatusCode == 422 {
-			return err//errors.New("Error: " + "Same name of repository is exists on your account")
+			return errors.New("Error: " + "Same name of repository is exists on your account")
 		}
-		return errors.New("Error while creating repository")
+		return errors.New("Error while creating repository.Please check your internet connection")
 	}
 	stringify := func(str *string) string {
 		return strings.Trim(github.Stringify(str), "\"")
