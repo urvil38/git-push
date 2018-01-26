@@ -64,10 +64,10 @@ func Wrap(s, color, effect string) string {
 	return format(colormap[color], effectemap[effect]) + s + unformat()
 }
 
-func format(a, c attribute) string {
-	return fmt.Sprintf("\x1b[%v;%vm", a, c)
+func format(effect, color attribute) string {
+	return fmt.Sprintf(escape+"[%v;%vm", effect, color)
 }
 
 func unformat() string {
-	return fmt.Sprintf("\x1b[%vm", effectemap["Reset"])
+	return fmt.Sprintf(escape+"[%vm", effectemap["Reset"])
 }
