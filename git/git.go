@@ -55,7 +55,7 @@ func CreateGitIgnoreFile() error {
 	return nil
 }
 
-func PushRepo(gitURL *types.RepoURL, user *types.User, basicUserInfo *types.BasicUserInfo) error {
+func PushRepo(gitURL types.RepoURL, user types.User, basicUserInfo types.BasicUserInfo) error {
 	if !remoteExists {
 		r, err := gogit.PlainOpen(utils.GetCurrentWorkingDirPath())
 		if err != nil {
@@ -67,6 +67,7 @@ func PushRepo(gitURL *types.RepoURL, user *types.User, basicUserInfo *types.Basi
 		_, err = r.CreateRemote(&config.RemoteConfig{
 			Name: gogit.DefaultRemoteName,
 			URLs: []string{gitURL.CloneURL},
+			
 		})
 		if err != nil {
 			return err
