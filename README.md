@@ -26,7 +26,7 @@ $ curl -LO https://storage.googleapis.com/git-push/v0.1/darwin/git-push
 
 - move binary file to bin directory ( For linux and macos users ) :
 
->Typically these commands must be run as root or through sudo.
+>Typically these commands must be run as root or through `sudo`.
 ```
 $ mv git-cli /usr/local/bin
 ```
