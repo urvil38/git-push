@@ -10,7 +10,7 @@ $ go build
 
 # Downloads
 
-For Linux and macos user you download git-push with `curl`:
+1. For Linux and macos user you download git-push with `curl`:
 
 ### For Linux:
 
@@ -24,7 +24,12 @@ $ curl -LO https://storage.googleapis.com/git-push/v0.1/linux/git-push
 $ curl -LO https://storage.googleapis.com/git-push/v0.1/darwin/git-push
 ```
 
-- move binary file to bin directory ( For linux and macos users ) :
+2. Make binary executable :
+```
+$ chmod +x ./git-push
+```
+
+3. move binary file to bin directory ( For linux and macos users ) :
 
 >Typically these commands must be run as root or through `sudo`.
 ```
