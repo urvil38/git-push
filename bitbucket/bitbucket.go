@@ -53,7 +53,7 @@ const (
 
 func Init() error {
 	if BitbucketUser.Username != "" || BitbucketUser.Password != "" {
-		fmt.Println(color.Wrap("=> You authenticated successfully", "FgGreen", "CrossedOut"))
+		fmt.Println(color.Wrap("=> You authenticated successfully", "FgGreen", "BlinkSlow"))
 		return nil
 	}
 	err := survey.Ask(questions.BitbucketCredential, &BitbucketUser)
@@ -71,7 +71,6 @@ func authenticateUser() error {
 	client = bitbucket.NewBasicAuth(BitbucketUser.Username, BitbucketUser.Password)
 	user, err := client.Users.Get(BitbucketUser.Username)
 	if user == nil || err != nil {
-		fmt.Println(err)
 		return errors.New("Invalid username or password")
 	}
 	b := new(bytes.Buffer)
@@ -100,7 +99,7 @@ func CreateRepo(answer types.Answer) error {
 	}
 	typeCheckHTMLURL(r)
 	typeCheckCloneURL(r)
-	fmt.Println(color.Wrap("=> "+BitbuckerURL.HTMLURL, "FgGreen", "CrossedOut"))
+	fmt.Println(color.Wrap("=> "+BitbuckerURL.HTMLURL, "FgGreen", "BlinkSlow"))
 	return nil
 }
 

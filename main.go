@@ -8,34 +8,29 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/urvil38/git-push/utils"
+	"github.com/urvil38/git-push/bitbucket"
 	"github.com/urvil38/git-push/color"
 	"github.com/urvil38/git-push/git"
 	"github.com/urvil38/git-push/github"
-	"github.com/urvil38/git-push/bitbucket"
 	"github.com/urvil38/git-push/questions"
 	"github.com/urvil38/git-push/types"
+	"github.com/urvil38/git-push/utils"
 	"gopkg.in/AlecAivazis/survey.v1"
 )
 
-var gitcliASCII = `
-  ________ .__   __              __________                .__     
- /  _____/ |__|_/  |_            \______   \ __ __   ______|  |__  
-/   \  ___ |  |\   __\   ______   |     ___/|  |  \ /  ___/|  |  \ 
-\    \_\  \|  | |  |    /_____/   |    |    |  |  / \___ \ |   Y  \
- \______  /|__| |__|              |____|    |____/ /____  >|___|  /
-     	\/                                              \/      \/ 
-`
-
 func init() {
 	home = os.Getenv("HOME")
+	if home == "" {
+		fmt.Println(help)
+		os.Exit(0)
+	}
 	userConfigFile = home + separator + ".config" + separator + "git-push" + separator + "userInfo"
 	configFolder = home + separator + ".config" + separator + "git-push"
 	createDir()
 	checkUserInfo()
 	remoteExists, _ = utils.CheckRemoteRepo()
 	if remoteExists {
-		fmt.Println(color.Wrap("Sorry, this tool will not help you because working repository is already on github or bitbucket!","FgRed","Bold"))
+		fmt.Println(color.Wrap("Sorry, this tool will not help you because working repository is already on github or bitbucket!", "FgRed", "Bold"))
 		os.Exit(0)
 	}
 }
@@ -59,7 +54,7 @@ func createDir() {
 
 func checkerror(err error) {
 	if err != nil {
-		fmt.Println(color.Wrap("=> "+err.Error(), "FgRed", "CrossedOut"))
+		fmt.Println(color.Wrap("=> "+err.Error(), "FgRed", "BlinkSlow"))
 		os.Exit(0)
 	}
 }
@@ -75,7 +70,32 @@ var (
 )
 
 const (
+	gitcliASCII = `
+  ________ .__   __              __________                .__     
+ /  _____/ |__|_/  |_            \______   \ __ __   ______|  |__  
+/   \  ___ |  |\   __\   ______   |     ___/|  |  \ /  ___/|  |  \ 
+\    \_\  \|  | |  |    /_____/   |    |    |  |  / \___ \ |   Y  \
+ \______  /|__| |__|              |____|    |____/ /____  >|___|  /
+     	\/                                              \/      \/ 
+`
 	separator = string(filepath.Separator)
+	help      = 
+`
+---------------x configure x----------------
+
+For linux and macos:
+
+	export $HOME=/path/to/home/where/git-push/can/store/credentials
+
+For windows:
+
+	you must set the HOME environment variable to your chosen path(I suggest c:\git-push)
+	
+	Under Windows, you may set environment variables through the "Environment Variables" 
+	button on the "Advanced" tab of the "System" control panel. Some versions of Windows 
+	provide this control panel through the "Advanced System Settings" option inside 
+	the "System" control panel. 	
+`
 )
 
 func main() {

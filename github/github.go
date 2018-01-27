@@ -50,7 +50,7 @@ const (
 //Init function ask for github username and password for basic auth
 func Init() error {
 	if GithubUser.Username != "" || GithubUser.Password != "" {
-		fmt.Println(color.Wrap("=> You authenticated successfully", "FgGreen", "CrossedOut"))
+		fmt.Println(color.Wrap("=> You authenticated successfully", "FgGreen", "BlinkSlow"))
 		return nil
 	}
 	err := survey.Ask(questions.GithubCredential, &GithubUser)
@@ -77,7 +77,7 @@ func authenticateUser() error {
 		return errors.New("Invalid username or password")
 	}
 
-	fmt.Println(color.Wrap("=> You authenticated successfully", "FgGreen", "CrossedOut"))
+	fmt.Println(color.Wrap("=> You authenticated successfully", "FgGreen", "BlinkSlow"))
 	
 	b := new(bytes.Buffer)
 	b.WriteString(GithubUser.Username + "\n")
@@ -120,6 +120,6 @@ func CreateRepo(answer types.Answer) error {
 		CloneURL: stringify(repository.CloneURL),
 		SSHURL:   stringify(repository.SSHURL),
 	}
-	fmt.Println(color.Wrap("=> "+GitURL.HTMLURL, "FgGreen", "CrossedOut"))
+	fmt.Println(color.Wrap("=> "+GitURL.HTMLURL, "FgGreen", "BlinkSlow"))
 	return nil
 }

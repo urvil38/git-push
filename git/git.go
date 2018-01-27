@@ -102,7 +102,7 @@ func PushRepo(gitURL types.RepoURL, user types.User, basicUserInfo types.BasicUs
 		if err != nil {
 			return err
 		}
-		fmt.Println(color.Wrap("=> Successfully Pushed Repository", "FgGreen", "CrossedOut"))
+		fmt.Println(color.Wrap("=> Successfully Pushed Repository", "FgGreen", "BlinkSlow"))
 		return nil
 	}
 	return nil
