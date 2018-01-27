@@ -12,6 +12,7 @@ import (
 	"github.com/urvil38/git-push/color"
 	"github.com/urvil38/git-push/git"
 	"github.com/urvil38/git-push/github"
+	"github.com/urvil38/git-push/bitbucket"
 	"github.com/urvil38/git-push/questions"
 	"github.com/urvil38/git-push/types"
 	"gopkg.in/AlecAivazis/survey.v1"
@@ -108,7 +109,7 @@ func main() {
 
 	switch service := answer.ServiceName; service {
 	case "Github":
-		err := github.Init(answer)
+		err := github.Init()
 		checkerror(err)
 
 		err = github.CreateRepo(answer)
@@ -118,6 +119,18 @@ func main() {
 		checkerror(err)
 
 		err = git.PushRepo(github.GitURL, github.GithubUser, basicUserInfo)
+		checkerror(err)
+	case "Bitbucket":
+		err := bitbucket.Init()
+		checkerror(err)
+
+		err = bitbucket.CreateRepo(answer)
+		checkerror(err)
+
+		err = git.CreateGitIgnoreFile()
+		checkerror(err)
+
+		err = git.PushRepo(bitbucket.BitbuckerURL, bitbucket.BitbucketUser, basicUserInfo)
 		checkerror(err)
 	}
 }

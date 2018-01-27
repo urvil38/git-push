@@ -48,7 +48,7 @@ const (
 )
 
 //Init function ask for github username and password for basic auth
-func Init(answer types.Answer) error {
+func Init() error {
 	if GithubUser.Username != "" || GithubUser.Password != "" {
 		fmt.Println(color.Wrap("=> You authenticated successfully", "FgGreen", "CrossedOut"))
 		return nil
@@ -58,14 +58,14 @@ func Init(answer types.Answer) error {
 		fmt.Println(err)
 	}
 
-	err = authenticateUser(answer)
+	err = authenticateUser()
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func authenticateUser(answer types.Answer) error {
+func authenticateUser() error {
 	tp := github.BasicAuthTransport{
 		Username: GithubUser.Username,
 		Password: GithubUser.Password,
