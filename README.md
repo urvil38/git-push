@@ -18,7 +18,7 @@ $ go build
     $ curl -LO https://storage.googleapis.com/git-push/v0.1/linux/git-push 
     ```
 
-    ### MacOs:
+    #### MacOs:
 
     ```
     $ curl -LO https://storage.googleapis.com/git-push/v0.1/darwin/git-push
@@ -29,9 +29,9 @@ $ go build
     $ chmod +x ./git-push
     ```
 
-3. move binary file to bin directory ( For linux and macos users ) :
+3. move binary file to bin directory :
 
-    >Typically these commands must be run as root or through `sudo`.
+    Typically these commands must be run as root or through `sudo`.
     ```
     $ mv git-cli /usr/local/bin
     ```
@@ -40,7 +40,7 @@ $ go build
 
 You can download this binary from this url using your browser:
 
-> Go to this URL for download git-cli:
+Go to this URL for download git-cli:
 
 ```
 https://storage.googleapis.com/git-push/v0.1/windwos/git-push.exe
@@ -52,11 +52,11 @@ You need to set `HOME` environment varible where git-cli store it's configuratio
 
 - For linux and macos:
 
->Typically these environment variable is already set most of the time.You can confirm this using following command:
+Typically these environment variable is already set most of the time.You can confirm this using following command:
 ```
 $ echo $HOME
 ```
->If it's return nothing then set HOME environment varible by following command:
+If it's return nothing then set HOME environment varible by following command:
 ```
 $ export $HOME=/path/to/home/where/git-push/can/store/credentials
 ```
