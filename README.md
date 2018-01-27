@@ -1,5 +1,5 @@
 # Git- Push
-git-push is a cli tool for absolute beginner of github and git to push repo on github by no efforts.
+## git-push is a cli tool for absolute beginner of github and git to push repo on github by no efforts.
 
 If you want to build git-push right away ,you need a working [Go environment](https://golang.org/doc/install). 
 ```
@@ -24,7 +24,7 @@ $ curl -LO https://storage.googleapis.com/git-push/v0.1/linux/git-push
 $ curl -LO https://storage.googleapis.com/git-push/v0.1/darwin/git-push
 ```
 
-move binary file to bin directory ( For linux and macos users ) :
+- move binary file to bin directory ( For linux and macos users ) :
 
 >Typically these commands must be run as root or through sudo.
 ```
@@ -58,7 +58,7 @@ $ export $HOME=/path/to/home/where/git-push/can/store/credentials
 
 For windows:
 
-you must set the HOME environment variable to your chosen path(I suggest c:\git-push)
+you must set the HOME environment variable to your chosen path(I suggest `c:\git-push`)
 	
 Under Windows, you may set environment variables through the "Environment Variables" 
 button on the "Advanced" tab of the "System" control panel. Some versions of Windows 
