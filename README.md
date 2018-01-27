@@ -1,7 +1,7 @@
 # Git- Push
-## git-push is a cli tool for absolute beginner of github and git to push repo on github by no efforts.
+### **git-push** is a cli tool for absolute beginner of github and git to push repo on github by no efforts.
 
-If you want to build git-push right away ,you need a working [Go environment](https://golang.org/doc/install). 
+- If you want to build git-push right away ,you need a working [Go environment](https://golang.org/doc/install). 
 ```
 $ go get github.com/urvil38/git-push
 $ go install
@@ -50,7 +50,7 @@ https://storage.googleapis.com/git-push/v0.1/windwos/git-push.exe
 
 You need to set HOME environment varible where git-cli store it's configuration:
 
-For linux and macos:
+- For linux and macos:
 
 >Typically these environment variable is already set most of the time.You can confirm this using following command:
 ```
@@ -61,7 +61,7 @@ $ echo $HOME
 $ export $HOME=/path/to/home/where/git-push/can/store/credentials
 ```
 
-For windows:
+- For windows:
 
 you must set the HOME environment variable to your chosen path(I suggest `c:\git-push`)
 	
