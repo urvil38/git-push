@@ -48,24 +48,26 @@ https://storage.googleapis.com/git-push/v0.1/windwos/git-push.exe
 
 ## Prerequisite:
 
-You need to set `HOME` environment varible where git-cli store it's configuration:
+1. You need to set `HOME` environment varible where git-cli store it's configuration:
 
-- For linux and macos:
+    - For linux and macos:
 
-    Typically these environment variable is already set most of the time.You can confirm this using following command:
-    ```
-    $ echo $HOME
-    ```
-    If it's return nothing then set HOME environment varible by following command:
-    ```
-    $ export $HOME=/path/to/home/where/git-push/can/store/credentials
-    ```
+        Typically these environment variable is already set most of the time.You can confirm this using following command:
+        ```
+        $ echo $HOME
+        ```
+        If it's return nothing then set HOME environment varible by following command:
+        ```
+        $ export $HOME=/path/to/home/where/git-push/can/store/credentials
+        ```
 
-- For windows:
+    - For windows:
 
-    you must set the HOME environment variable to your chosen path(I suggest `c:\git-push`)
-        
-    Under Windows, you may set environment variables through the "Environment Variables" 
-    button on the "Advanced" tab of the "System" control panel. Some versions of Windows 
-    provide this control panel through the "Advanced System Settings" option inside 
-    the "System" control panel.
+        you must set the HOME environment variable to your chosen path(I suggest `c:\git-push`)
+            
+        Under Windows, you may set environment variables through the "Environment Variables" 
+        button on the "Advanced" tab of the "System" control panel. Some versions of Windows 
+        provide this control panel through the "Advanced System Settings" option inside 
+        the "System" control panel.
+
+2. You also need `git` install on your machine.If you don't have download from [here](https://git-scm.com/downloads)    
