@@ -11,7 +11,7 @@ var ServiceName = []*survey.Question{
 		Name: "servicename",
 		Prompt: &survey.Select{
 			Message: "Pleasse select a service you want to use:",
-			Options: []string{"Github"},
+			Options: []string{"Github","Bitbucket"},
 			Default: "Github",
 		},
 	},
@@ -22,7 +22,7 @@ var GithubCredential = []*survey.Question{
 	{
 		Name: "username",
 		Prompt: &survey.Input{
-			Message: "Enter your username or Email:",
+			Message: "Enter your github username or Email:",
 			Help:    "Please give your github username or email address",
 		},
 		Validate: survey.Required,
@@ -30,7 +30,25 @@ var GithubCredential = []*survey.Question{
 	{
 		Name: "password",
 		Prompt: &survey.Password{
-			Message: "Enter your Password:",
+			Message: "Enter your github Password:",
+		},
+		Validate: survey.Required,
+	},
+}
+
+var BitbucketCredential = []*survey.Question{
+	{
+		Name: "username",
+		Prompt: &survey.Input{
+			Message: "Enter your bitbucket Username:",
+			Help:    "Please give your bitbucket Username",
+		},
+		Validate: survey.Required,
+	},
+	{
+		Name: "password",
+		Prompt: &survey.Password{
+			Message: "Enter your bitbucket Password:",
 		},
 		Validate: survey.Required,
 	},
