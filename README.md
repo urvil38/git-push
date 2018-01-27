@@ -33,14 +33,14 @@ $ go build
 
     Typically these commands must be run as root or through `sudo`.
     ```
-    $ mv git-cli /usr/local/bin
+    $ mv git-push /usr/local/bin
     ```
 
 ### Windows:
 
 You can download this binary from this url using your browser:
 
-Go to this URL for download git-cli:
+Go to this URL for download git-push:
 
 ```
 https://storage.googleapis.com/git-push/v0.1/windwos/git-push.exe
@@ -48,7 +48,7 @@ https://storage.googleapis.com/git-push/v0.1/windwos/git-push.exe
 
 ## Prerequisite:
 
-1. You need to set `HOME` environment varible where git-cli store it's configuration:
+1. You need to set `HOME` environment varible where git-push store it's configuration:
 
     - For linux and macos:
 
