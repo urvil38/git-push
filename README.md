@@ -9,34 +9,34 @@ $ go build
 ```
 
 # Downloads
-
+### Linux and Macos:
 1. For Linux and macos user you download git-push with `curl`:
 
-### For Linux:
+    #### Linux:
 
-```
-$ curl -LO https://storage.googleapis.com/git-push/v0.1/linux/git-push 
-```
+    ```
+    $ curl -LO https://storage.googleapis.com/git-push/v0.1/linux/git-push 
+    ```
 
-### For MacOs:
+    ### MacOs:
 
-```
-$ curl -LO https://storage.googleapis.com/git-push/v0.1/darwin/git-push
-```
+    ```
+    $ curl -LO https://storage.googleapis.com/git-push/v0.1/darwin/git-push
+    ```
 
 2. Make binary executable :
-```
-$ chmod +x ./git-push
-```
+    ```
+    $ chmod +x ./git-push
+    ```
 
 3. move binary file to bin directory ( For linux and macos users ) :
 
->Typically these commands must be run as root or through `sudo`.
-```
-$ mv git-cli /usr/local/bin
-```
+    >Typically these commands must be run as root or through `sudo`.
+    ```
+    $ mv git-cli /usr/local/bin
+    ```
 
-## For windows:
+### Windows:
 
 You can download this binary from this url using your browser:
 
@@ -48,7 +48,7 @@ https://storage.googleapis.com/git-push/v0.1/windwos/git-push.exe
 
 ## Prerequisite:
 
-You need to set HOME environment varible where git-cli store it's configuration:
+You need to set `HOME` environment varible where git-cli store it's configuration:
 
 - For linux and macos:
 
