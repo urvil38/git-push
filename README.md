@@ -43,7 +43,7 @@ You can download this binary from this url using your browser:
 Go to this URL for download git-push:
 
 ```
-https://storage.googleapis.com/git-push/v0.1/windwos/git-push.exe
+https://storage.googleapis.com/git-push/v0.1/windows/git-push.exe
 ```
 
 ## Prerequisite:
