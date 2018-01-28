@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/fatih/color"
 	"github.com/google/go-github/github"
-	"github.com/urvil38/git-push/color"
 	"github.com/urvil38/git-push/encoding"
 	"github.com/urvil38/git-push/questions"
 	"github.com/urvil38/git-push/types"
@@ -19,6 +19,7 @@ import (
 )
 
 func init() {
+	c = color.New(color.FgGreen, color.Bold)
 	home = os.Getenv("HOME")
 	configFilePath = home + separator + ".config" + separator + "git-push" + separator + "git-push-github"
 	checkCredential()
@@ -41,6 +42,7 @@ var (
 	configFilePath string
 	GitURL         types.RepoURL
 	GithubUser     types.User
+	c              *color.Color
 )
 
 const (
@@ -50,7 +52,7 @@ const (
 //Init function ask for github username and password for basic auth
 func Init() error {
 	if GithubUser.Username != "" || GithubUser.Password != "" {
-		fmt.Println(color.Wrap("=> You authenticated successfully", "FgGreen", "BlinkSlow"))
+		c.Println("=> You authenticated successfully")
 		return nil
 	}
 	err := survey.Ask(questions.GithubCredential, &GithubUser)
@@ -77,15 +79,15 @@ func authenticateUser() error {
 		return errors.New("Invalid username or password")
 	}
 
-	fmt.Println(color.Wrap("=> You authenticated successfully", "FgGreen", "BlinkSlow"))
-	
+	c.Println("=> You authenticated successfully")
+
 	b := new(bytes.Buffer)
 	b.WriteString(GithubUser.Username + "\n")
 	b.WriteString(GithubUser.Password)
-	
+
 	sEnc := encoding.Encode(b.Bytes())
-	
-	err = ioutil.WriteFile(configFilePath,[]byte(sEnc),0555)
+
+	err = ioutil.WriteFile(configFilePath, []byte(sEnc), 0555)
 	if err != nil {
 		return err
 	}
@@ -105,10 +107,13 @@ func CreateRepo(answer types.Answer) error {
 		Description: github.String(answer.RepoDescription),
 		Private:     github.Bool(answer.RepoType == "Private"),
 	}
-	repository, response, err := client.Repositories.Create(ctx, "", repo)
+	repository, _, err := client.Repositories.Create(ctx, "", repo)
 	if err != nil {
-		if response != nil && response.StatusCode == 422 {
-			return errors.New("Error: " + "Same name of repository is exists on your account")
+		if strings.Contains(err.Error(), "exists") {
+			return errors.New("Error: Same name of repository is exists on your account")
+		}
+		if strings.Contains(err.Error(), "private") {
+			return errors.New("Error: Please upgrade your plan to create a new private repository")
 		}
 		return errors.New("Error while creating repository.Please check your internet connection")
 	}
@@ -120,6 +125,6 @@ func CreateRepo(answer types.Answer) error {
 		CloneURL: stringify(repository.CloneURL),
 		SSHURL:   stringify(repository.SSHURL),
 	}
-	fmt.Println(color.Wrap("=> "+GitURL.HTMLURL, "FgGreen", "BlinkSlow"))
+	c.Println("=> " + GitURL.HTMLURL)
 	return nil
 }

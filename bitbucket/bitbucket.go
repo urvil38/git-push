@@ -3,14 +3,13 @@ package bitbucket
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/fatih/color"
 	"github.com/ktrysmt/go-bitbucket"
-	"github.com/urvil38/git-push/color"
 	"github.com/urvil38/git-push/encoding"
 	"github.com/urvil38/git-push/questions"
 	"github.com/urvil38/git-push/types"
@@ -18,6 +17,7 @@ import (
 )
 
 func init() {
+	c = color.New(color.FgGreen, color.Bold)
 	home = os.Getenv("HOME")
 	configFilePath = home + separator + ".config" + separator + "git-push" + separator + "git-push-bitbucket"
 	checkCredential()
@@ -40,10 +40,11 @@ var (
 	client         *bitbucket.Client
 	configFilePath string
 	home           string
+	c              *color.Color
 )
 
 var (
-	errNotGetHTMLURL = errors.New("Not get right type of html url value from responsse")
+	errNotGetHTMLURL  = errors.New("Not get right type of html url value from responsse")
 	errNotGetCloneURL = errors.New("Not get right type of clone urls value from responsse")
 )
 
@@ -52,8 +53,9 @@ const (
 )
 
 func Init() error {
+
 	if BitbucketUser.Username != "" || BitbucketUser.Password != "" {
-		fmt.Println(color.Wrap("=> You authenticated successfully", "FgGreen", "BlinkSlow"))
+		c.Println("=> You authenticated successfully")
 		return nil
 	}
 	err := survey.Ask(questions.BitbucketCredential, &BitbucketUser)
@@ -99,7 +101,7 @@ func CreateRepo(answer types.Answer) error {
 	}
 	typeCheckHTMLURL(r)
 	typeCheckCloneURL(r)
-	fmt.Println(color.Wrap("=> "+BitbuckerURL.HTMLURL, "FgGreen", "BlinkSlow"))
+	c.Println("=> " + BitbuckerURL.HTMLURL)
 	return nil
 }
 

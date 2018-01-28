@@ -1,10 +1,9 @@
 package git
 
 import (
-	"fmt"
 	"time"
-	
-	"github.com/urvil38/git-push/color"
+
+	"github.com/fatih/color"
 	"github.com/urvil38/git-push/questions"
 	"github.com/urvil38/git-push/types"
 	"github.com/urvil38/git-push/utils"
@@ -16,6 +15,7 @@ import (
 )
 
 func init() {
+	c = color.New(color.FgGreen, color.Bold)
 	remoteExists, err = utils.CheckRemoteRepo()
 	if err != nil {
 		return
@@ -25,6 +25,7 @@ func init() {
 var (
 	remoteExists bool
 	err          error
+	c            *color.Color
 )
 
 func CreateGitIgnoreFile() error {
@@ -59,7 +60,7 @@ func PushRepo(gitURL types.RepoURL, user types.User, basicUserInfo types.BasicUs
 	if !remoteExists {
 		r, err := gogit.PlainOpen(utils.GetCurrentWorkingDirPath())
 		if err != nil {
-			r,err = gogit.PlainInit(utils.GetCurrentWorkingDirPath(),false)
+			r, err = gogit.PlainInit(utils.GetCurrentWorkingDirPath(), false)
 			if err != nil {
 				return err
 			}
@@ -67,7 +68,6 @@ func PushRepo(gitURL types.RepoURL, user types.User, basicUserInfo types.BasicUs
 		_, err = r.CreateRemote(&config.RemoteConfig{
 			Name: gogit.DefaultRemoteName,
 			URLs: []string{gitURL.CloneURL},
-			
 		})
 		if err != nil {
 			return err
@@ -102,7 +102,7 @@ func PushRepo(gitURL types.RepoURL, user types.User, basicUserInfo types.BasicUs
 		if err != nil {
 			return err
 		}
-		fmt.Println(color.Wrap("=> Successfully Pushed Repository", "FgGreen", "BlinkSlow"))
+		c.Println("=> Successfully Pushed Repository")
 		return nil
 	}
 	return nil

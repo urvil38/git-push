@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/urvil38/git-push/bitbucket"
-	"github.com/urvil38/git-push/color"
+	"github.com/fatih/color"
 	"github.com/urvil38/git-push/git"
 	"github.com/urvil38/git-push/github"
 	"github.com/urvil38/git-push/questions"
@@ -19,6 +19,8 @@ import (
 )
 
 func init() {
+	colorRed = color.New(color.FgRed,color.Bold)
+	colorYellow = color.New(color.FgYellow,color.Bold)
 	home = os.Getenv("HOME")
 	if home == "" {
 		fmt.Println(help)
@@ -30,7 +32,7 @@ func init() {
 	checkUserInfo()
 	remoteExists, _ = utils.CheckRemoteRepo()
 	if remoteExists {
-		fmt.Println(color.Wrap("Sorry, this tool will not help you because working repository is already on github or bitbucket!", "FgRed", "Bold"))
+		colorRed.Println("Sorry, this tool will not help you because working repository is already on github or bitbucket!")
 		os.Exit(0)
 	}
 }
@@ -54,7 +56,7 @@ func createDir() {
 
 func checkerror(err error) {
 	if err != nil {
-		fmt.Println(color.Wrap("=> "+err.Error(), "FgRed", "BlinkSlow"))
+		colorRed.Println("=> "+err.Error())
 		os.Exit(0)
 	}
 }
@@ -67,6 +69,8 @@ var (
 	home           string
 	userConfigFile string
 	configFolder   string
+	colorRed *color.Color
+	colorYellow *color.Color
 )
 
 const (
@@ -99,7 +103,7 @@ For windows:
 )
 
 func main() {
-	fmt.Println(color.Wrap(gitcliASCII, "FgYellow", "Bold"))
+	colorYellow.Println(gitcliASCII)
 
 	if basicUserInfo.Email == "" || basicUserInfo.Name == "" {
 		err := survey.Ask(questions.UserInfo, &basicUserInfo)
