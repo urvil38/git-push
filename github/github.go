@@ -52,7 +52,7 @@ const (
 //Init function ask for github username and password for basic auth
 func Init() error {
 	if GithubUser.Username != "" || GithubUser.Password != "" {
-		c.Println("=> You authenticated successfully")
+		c.Println("=> You authenticated successfully ✓")
 		return nil
 	}
 	err := survey.Ask(questions.GithubCredential, &GithubUser)
