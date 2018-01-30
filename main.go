@@ -74,7 +74,7 @@ var (
 )
 
 const (
-	gitcliASCII = `
+	banner = `
   ________ .__   __              __________                .__     
  /  _____/ |__|_/  |_            \______   \ __ __   ______|  |__  
 /   \  ___ |  |\   __\   ______   |     ___/|  |  \ /  ___/|  |  \ 
@@ -103,7 +103,7 @@ For windows:
 )
 
 func main() {
-	colorYellow.Println(gitcliASCII)
+	colorYellow.Println(banner)
 
 	if basicUserInfo.Email == "" || basicUserInfo.Name == "" {
 		err := survey.Ask(questions.UserInfo, &basicUserInfo)
