@@ -1,10 +1,5 @@
 package types
 
-type Answer struct {
-	ServiceName string `survey:"servicename"`
-	Repo
-}
-
 type User struct {
 	Username string `survey:"username"`
 	Password string `survey:"password"`

@@ -55,7 +55,7 @@ const (
 func Init() error {
 
 	if BitbucketUser.Username != "" || BitbucketUser.Password != "" {
-		c.Println("=> You authenticated successfully")
+		c.Println("=> You authenticated successfully ✓")
 		return nil
 	}
 	err := survey.Ask(questions.BitbucketCredential, &BitbucketUser)
@@ -73,11 +73,13 @@ func authenticateUser() error {
 	client = bitbucket.NewBasicAuth(BitbucketUser.Username, BitbucketUser.Password)
 	user, err := client.Users.Get(BitbucketUser.Username)
 	if user == nil || err != nil {
-		return errors.New("Invalid username or password")
+		return errors.New("Invalid username or password ✗")
 	}
+
+	c.Println("=> You authenticated successfully ✓")
+
 	b := new(bytes.Buffer)
-	b.WriteString(BitbucketUser.Username + "\n")
-	b.WriteString(BitbucketUser.Password)
+	b.WriteString(BitbucketUser.Username + "\n" + BitbucketUser.Password)
 
 	sEnc := encoding.Encode(b.Bytes())
 
@@ -88,16 +90,16 @@ func authenticateUser() error {
 	return nil
 }
 
-func CreateRepo(answer types.Answer) error {
+func CreateRepo(repo types.Repo) error {
 	client = bitbucket.NewBasicAuth(BitbucketUser.Username, BitbucketUser.Password)
 	r, err := client.Repositories.Repository.Create(&bitbucket.RepositoryOptions{
 		Owner:       BitbucketUser.Username,
-		Repo_slug:   answer.RepoName,
-		Description: answer.RepoDescription,
-		Is_private:  formatBool(answer.RepoType == "Private"),
+		Repo_slug:   repo.RepoName,
+		Description: repo.RepoDescription,
+		Is_private:  formatBool(repo.RepoType == "Private"),
 	})
 	if err != nil {
-		return errors.New("Error:Couldn't create repository.Please check your internet connection or make sure you don't have same repository name on bitbucket")
+		return errors.New("Error:Couldn't create repository.Make sure you don't have same repository name on bitbucket or Please check your internet connection❗")
 	}
 	typeCheckHTMLURL(r)
 	typeCheckCloneURL(r)

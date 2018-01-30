@@ -76,14 +76,13 @@ func authenticateUser() error {
 	ctx := context.Background()
 	_, _, err := client.Users.Get(ctx, "")
 	if err != nil {
-		return errors.New("Invalid username or password")
+		return errors.New("Invalid username or password ✗")
 	}
 
-	c.Println("=> You authenticated successfully")
+	c.Println("=> You authenticated successfully ✓")
 
 	b := new(bytes.Buffer)
-	b.WriteString(GithubUser.Username + "\n")
-	b.WriteString(GithubUser.Password)
+	b.WriteString(GithubUser.Username + "\n" + GithubUser.Password)
 
 	sEnc := encoding.Encode(b.Bytes())
 
@@ -95,19 +94,19 @@ func authenticateUser() error {
 	return nil
 }
 
-func CreateRepo(answer types.Answer) error {
+func CreateRepo(repo types.Repo) error {
 	tp := github.BasicAuthTransport{
 		Username: GithubUser.Username,
 		Password: GithubUser.Password,
 	}
 	client := github.NewClient(tp.Client())
 	ctx := context.Background()
-	repo := &github.Repository{
-		Name:        github.String(answer.RepoName),
-		Description: github.String(answer.RepoDescription),
-		Private:     github.Bool(answer.RepoType == "Private"),
+	r := &github.Repository{
+		Name:        github.String(repo.RepoName),
+		Description: github.String(repo.RepoDescription),
+		Private:     github.Bool(repo.RepoType == "Private"),
 	}
-	repository, _, err := client.Repositories.Create(ctx, "", repo)
+	repository, _, err := client.Repositories.Create(ctx, "", r)
 	if err != nil {
 		if strings.Contains(err.Error(), "exists") {
 			return errors.New("Error: Same name of repository is exists on your account")
@@ -115,7 +114,7 @@ func CreateRepo(answer types.Answer) error {
 		if strings.Contains(err.Error(), "private") {
 			return errors.New("Error: Please upgrade your plan to create a new private repository")
 		}
-		return errors.New("Error while creating repository.Please check your internet connection")
+		return errors.New("Error while creating repository.Please check your internet connection❗")
 	}
 	stringify := func(str *string) string {
 		return strings.Trim(github.Stringify(str), "\"")

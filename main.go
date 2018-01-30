@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/urvil38/git-push/bitbucket"
 	"github.com/fatih/color"
+	"github.com/urvil38/git-push/bitbucket"
 	"github.com/urvil38/git-push/git"
 	"github.com/urvil38/git-push/github"
 	"github.com/urvil38/git-push/questions"
@@ -19,8 +19,8 @@ import (
 )
 
 func init() {
-	colorRed = color.New(color.FgRed,color.Bold)
-	colorYellow = color.New(color.FgYellow,color.Bold)
+	colorRed = color.New(color.FgRed, color.Bold)
+	colorYellow = color.New(color.FgYellow, color.Bold)
 	home = os.Getenv("HOME")
 	if home == "" {
 		fmt.Println(help)
@@ -56,21 +56,22 @@ func createDir() {
 
 func checkerror(err error) {
 	if err != nil {
-		colorRed.Println("=> "+err.Error())
+		colorRed.Println("=> " + err.Error())
 		os.Exit(0)
 	}
 }
 
 var (
-	answer         types.Answer
+	serviceName    string
+	repo           types.Repo
 	basicUserInfo  types.BasicUserInfo
 	remoteExists   bool
 	err            error
 	home           string
 	userConfigFile string
 	configFolder   string
-	colorRed *color.Color
-	colorYellow *color.Color
+	colorRed       *color.Color
+	colorYellow    *color.Color
 )
 
 const (
@@ -83,8 +84,7 @@ const (
      	\/                                              \/      \/ 
 `
 	separator = string(filepath.Separator)
-	help      = 
-`
+	help      = `
 ---------------x configure x----------------
 
 For linux and macos:
@@ -117,26 +117,26 @@ func main() {
 		}
 	}
 
-	err = survey.Ask(questions.ServiceName, &answer)
+	err = survey.Ask(questions.ServiceName, &serviceName)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
 	if !remoteExists {
-		err = survey.Ask(questions.GithubRepoInfo, &answer.Repo)
+		err = survey.Ask(questions.GithubRepoInfo, &repo)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 	}
 
-	switch service := answer.ServiceName; service {
+	switch serviceName {
 	case "Github":
 		err := github.Init()
 		checkerror(err)
 
-		err = github.CreateRepo(answer)
+		err = github.CreateRepo(repo)
 		checkerror(err)
 
 		err = git.CreateGitIgnoreFile()
@@ -148,7 +148,7 @@ func main() {
 		err := bitbucket.Init()
 		checkerror(err)
 
-		err = bitbucket.CreateRepo(answer)
+		err = bitbucket.CreateRepo(repo)
 		checkerror(err)
 
 		err = git.CreateGitIgnoreFile()
