@@ -34,9 +34,9 @@ func init() {
 	remoteExists, _ = utils.CheckRemoteRepo()
 	if remoteExists {
 		colorRed.Println("Sorry, this tool will not help you because working repository is already on github or bitbucket!")
-		colorRed.Print("ℹ You can use ")
+		colorRed.Print("ℹ  You can use ")
 		colorYellow.Print("$ git push origin master")
-		colorRed.Print(" to push changes.")
+		colorRed.Println(" to push changes.")
 		os.Exit(0)
 	}
 }
