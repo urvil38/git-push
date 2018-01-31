@@ -17,13 +17,13 @@ $ go build
     #### Linux:
 
     ```
-    $ curl -LO https://storage.googleapis.com/git-push/v0.1/linux/git-push 
+    $ curl -LO https://storage.googleapis.com/git-push/v0.2/linux/git-push 
     ```
 
     #### MacOs:
 
     ```
-    $ curl -LO https://storage.googleapis.com/git-push/v0.1/darwin/git-push
+    $ curl -LO https://storage.googleapis.com/git-push/v0.2/darwin/git-push
     ```
 
 2. Make binary executable :
@@ -45,7 +45,7 @@ You can download this binary from this url using your browser:
 Go to this URL for download git-push:
 
 ```
-https://storage.googleapis.com/git-push/v0.1/windows/git-push.exe
+https://storage.googleapis.com/git-push/v0.2/windows/git-push.exe
 ```
 
 ## Prerequisite:
