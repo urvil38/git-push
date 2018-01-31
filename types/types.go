@@ -1,13 +1,12 @@
 package types
 
-type Answer struct {
-	ServiceName string `survey:"servicename"`
-	Repo
-}
-
-type User struct {
+type BasicAuth struct {
 	Username string `survey:"username"`
 	Password string `survey:"password"`
+}
+
+type OAuth struct {
+	Token string `survey:"token"`
 }
 
 type BasicUserInfo struct {

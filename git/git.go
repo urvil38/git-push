@@ -1,6 +1,7 @@
 package git
 
 import (
+	"errors"
 	"time"
 
 	"github.com/fatih/color"
@@ -56,7 +57,7 @@ func CreateGitIgnoreFile() error {
 	return nil
 }
 
-func PushRepo(gitURL types.RepoURL, user types.User, basicUserInfo types.BasicUserInfo) error {
+func PushRepo(gitURL types.RepoURL, user types.BasicAuth, basicUserInfo types.BasicUserInfo) error {
 	if !remoteExists {
 		r, err := gogit.PlainOpen(utils.GetCurrentWorkingDirPath())
 		if err != nil {
@@ -100,9 +101,9 @@ func PushRepo(gitURL types.RepoURL, user types.User, basicUserInfo types.BasicUs
 			Auth: &auth,
 		})
 		if err != nil {
-			return err
+			return errors.New("ERROR: Unable to push repository.Please check your username or password are correct ℹ")
 		}
-		c.Println("=> Successfully Pushed Repository")
+		c.Println("=> Successfully Pushed Repository ✓")
 		return nil
 	}
 	return nil
