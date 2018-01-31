@@ -11,7 +11,7 @@ var ServiceName = []*survey.Question{
 		Name: "servicename",
 		Prompt: &survey.Select{
 			Message: "Pleasse select a service you want to use:",
-			Options: []string{"Github","Bitbucket"},
+			Options: []string{"Github", "Bitbucket","GitLab"},
 			Default: "Github",
 		},
 	},
@@ -49,6 +49,35 @@ var BitbucketCredential = []*survey.Question{
 		Name: "password",
 		Prompt: &survey.Password{
 			Message: "Enter your bitbucket Password:",
+		},
+		Validate: survey.Required,
+	},
+}
+
+var GitlabCredential = []*survey.Question{
+	{
+		Name: "username",
+		Prompt: &survey.Input{
+			Message: "Enter your GitLab Username:",
+			Help:    "Please give your GitLab Username",
+		},
+		Validate: survey.Required,
+	},
+	{
+		Name: "password",
+		Prompt: &survey.Password{
+			Message: "Enter your GitLab Password:",
+		},
+		Validate: survey.Required,
+	},
+}
+
+var GitlabToken = []*survey.Question{
+	{
+		Name: "token",
+		Prompt: &survey.Password{
+			Message: "Enter your GitLab Token:",
+			Help: "You need to provide gitlab OAuth token here",
 		},
 		Validate: survey.Required,
 	},
