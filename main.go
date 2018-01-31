@@ -7,8 +7,9 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
+	
 	"github.com/fatih/color"
+	"github.com/urvil38/git-push/gitlab"
 	"github.com/urvil38/git-push/bitbucket"
 	"github.com/urvil38/git-push/git"
 	"github.com/urvil38/git-push/github"
@@ -33,6 +34,9 @@ func init() {
 	remoteExists, _ = utils.CheckRemoteRepo()
 	if remoteExists {
 		colorRed.Println("Sorry, this tool will not help you because working repository is already on github or bitbucket!")
+		colorRed.Print("ℹ You can use ")
+		colorYellow.Print("$ git push origin master")
+		colorRed.Print(" to push changes.")
 		os.Exit(0)
 	}
 }
@@ -156,5 +160,24 @@ func main() {
 
 		err = git.PushRepo(bitbucket.BitbuckerURL, bitbucket.BitbucketUser, basicUserInfo)
 		checkerror(err)
+	case "GitLab":
+		err := gitlab.Init()
+		checkerror(err)
+
+		err = gitlab.CreateRepo(repo)
+		checkerror(err)
+
+		err = git.CreateGitIgnoreFile()
+		checkerror(err)
+
+		err = git.PushRepo(gitlab.GitLabURL, gitlab.GitlabUser, basicUserInfo)
+		if err != nil {
+			removeFileErr := os.Remove(configFolder+separator+"git-push-gitlab")
+			if removeFileErr != nil {
+				colorRed.Println("Error: "+removeFileErr.Error())
+				os.Exit(0)
+			}
+		}
+		checkerror(err)	
 	}
 }
