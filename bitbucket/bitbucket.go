@@ -35,7 +35,7 @@ func checkCredential() {
 }
 
 var (
-	BitbucketUser  types.User
+	BitbucketUser  types.BasicAuth
 	BitbuckerURL   types.RepoURL
 	client         *bitbucket.Client
 	configFilePath string

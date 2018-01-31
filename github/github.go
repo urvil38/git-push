@@ -41,7 +41,7 @@ var (
 	client         *github.Client
 	configFilePath string
 	GitURL         types.RepoURL
-	GithubUser     types.User
+	GithubUser     types.BasicAuth
 	c              *color.Color
 )
 
