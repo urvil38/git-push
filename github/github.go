@@ -99,7 +99,7 @@ func CreateRepo(repo types.Repo) error {
 		Username: GithubUser.Username,
 		Password: GithubUser.Password,
 	}
-	client := github.NewClient(tp.Client())
+	client = github.NewClient(tp.Client())
 	ctx := context.Background()
 	r := &github.Repository{
 		Name:        github.String(repo.RepoName),

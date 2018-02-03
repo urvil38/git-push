@@ -11,8 +11,8 @@ var ServiceName = []*survey.Question{
 		Name: "servicename",
 		Prompt: &survey.Select{
 			Message: "Pleasse select a service you want to use:",
-			Options: []string{"Github", "Bitbucket","GitLab"},
-			Default: "Github",
+			Options: []string{"GitHub", "BitBucket","GitLab"},
+			Default: "GitHub",
 		},
 	},
 }

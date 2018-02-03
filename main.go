@@ -7,12 +7,12 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	
+
 	"github.com/fatih/color"
-	"github.com/urvil38/git-push/gitlab"
 	"github.com/urvil38/git-push/bitbucket"
 	"github.com/urvil38/git-push/git"
 	"github.com/urvil38/git-push/github"
+	"github.com/urvil38/git-push/gitlab"
 	"github.com/urvil38/git-push/questions"
 	"github.com/urvil38/git-push/types"
 	"github.com/urvil38/git-push/utils"
@@ -22,18 +22,22 @@ import (
 func init() {
 	colorRed = color.New(color.FgRed, color.Bold)
 	colorYellow = color.New(color.FgYellow, color.Bold)
+	
 	home = os.Getenv("HOME")
 	if home == "" {
 		fmt.Println(help)
 		os.Exit(0)
 	}
+
 	userConfigFile = home + separator + ".config" + separator + "git-push" + separator + "userInfo"
 	configFolder = home + separator + ".config" + separator + "git-push"
+	
 	createDir()
 	checkUserInfo()
+	
 	remoteExists, _ = utils.CheckRemoteRepo()
 	if remoteExists {
-		colorRed.Println("Sorry, this tool will not help you because working repository is already on github or bitbucket!")
+		colorRed.Println("Sorry, this tool will not help you because working repository is already on github or bitbucket or gitlab!")
 		colorRed.Print("ℹ  You can use ")
 		colorYellow.Print("$ git push origin master")
 		colorRed.Println(" to push changes.")
@@ -66,8 +70,6 @@ func checkerror(err error) {
 }
 
 var (
-	serviceName    string
-	repo           types.Repo
 	basicUserInfo  types.BasicUserInfo
 	remoteExists   bool
 	err            error
@@ -80,12 +82,12 @@ var (
 
 const (
 	banner = `
-  ________ .__   __              __________                .__     
- /  _____/ |__|_/  |_            \______   \ __ __   ______|  |__  
-/   \  ___ |  |\   __\   ______   |     ___/|  |  \ /  ___/|  |  \ 
-\    \_\  \|  | |  |    /_____/   |    |    |  |  / \___ \ |   Y  \
- \______  /|__| |__|              |____|    |____/ /____  >|___|  /
-     	\/                                              \/      \/ 
+  ________ .__   __              __________                .__     		
+ /  _____/ |__|_/  |_            \______   \ __ __   ______|  |__  	  # Author   :  Urvil Patel	
+/   \  ___ |  |\   __\   ______   |     ___/|  |  \ /  ___/|  |  \ 	  # Twitter  :  @UrvilPatel12	
+\    \_\  \|  | |  |    /_____/   |    |    |  |  / \___ \ |   Y  \	  # Version  :  0.2.0	
+ \______  /|__| |__|              |____|    |____/ /____  >|___|  /	  # Github   :  https://github.com/urvil38	 
+     	\/                                              \/      \/ 		
 `
 	separator = string(filepath.Separator)
 	help      = `
@@ -107,8 +109,9 @@ For windows:
 )
 
 func main() {
-	colorYellow.Println(banner)
 
+	colorYellow.Println(banner)
+	
 	if basicUserInfo.Email == "" || basicUserInfo.Name == "" {
 		err := survey.Ask(questions.UserInfo, &basicUserInfo)
 		if err != nil {
@@ -120,13 +123,15 @@ func main() {
 			return
 		}
 	}
-
+	
+	var serviceName string
 	err = survey.Ask(questions.ServiceName, &serviceName)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-
+	
+	var repo types.Repo
 	if !remoteExists {
 		err = survey.Ask(questions.GithubRepoInfo, &repo)
 		if err != nil {
@@ -136,7 +141,7 @@ func main() {
 	}
 
 	switch serviceName {
-	case "Github":
+	case "GitHub":
 		err := github.Init()
 		checkerror(err)
 
@@ -148,7 +153,7 @@ func main() {
 
 		err = git.PushRepo(github.GitURL, github.GithubUser, basicUserInfo)
 		checkerror(err)
-	case "Bitbucket":
+	case "BitBucket":
 		err := bitbucket.Init()
 		checkerror(err)
 
@@ -172,12 +177,12 @@ func main() {
 
 		err = git.PushRepo(gitlab.GitLabURL, gitlab.GitlabUser, basicUserInfo)
 		if err != nil {
-			removeFileErr := os.Remove(configFolder+separator+"git-push-gitlab")
+			removeFileErr := os.Remove(configFolder + separator + "git-push-gitlab")
 			if removeFileErr != nil {
-				colorRed.Println("Error: "+removeFileErr.Error())
+				colorRed.Println("Error: " + removeFileErr.Error())
 				os.Exit(0)
 			}
 		}
-		checkerror(err)	
+		checkerror(err)
 	}
 }
