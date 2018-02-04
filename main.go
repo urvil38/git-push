@@ -83,11 +83,17 @@ var (
 const (
 	banner = `
   ________ .__   __              __________                .__     		
- /  _____/ |__|_/  |_            \______   \ __ __   ______|  |__  	  # Author   :  Urvil Patel	
-/   \  ___ |  |\   __\   ______   |     ___/|  |  \ /  ___/|  |  \ 	  # Twitter  :  @UrvilPatel12	
-\    \_\  \|  | |  |    /_____/   |    |    |  |  / \___ \ |   Y  \	  # Version  :  0.2.0	
- \______  /|__| |__|              |____|    |____/ /____  >|___|  /	  # Github   :  https://github.com/urvil38	 
-     	\/                                              \/      \/ 		
+ /  _____/ |__|_/  |_            \______   \ __ __   ______|  |__  	  	
+/   \  ___ |  |\   __\   ______   |     ___/|  |  \ /  ___/|  |  \ 	  	
+\    \_\  \|  | |  |    /_____/   |    |    |  |  / \___ \ |   Y  \	  
+ \______  /|__| |__|              |____|    |____/ /____  >|___|  /	  
+     	\/                                              \/      \/ 				 
+
+ # Author   :  Urvil Patel
+ # Twitter  :  @UrvilPatel12
+ # Version  :  0.2.0	
+ # Github   :  https://github.com/urvil38
+
 `
 	separator = string(filepath.Separator)
 	help      = `
