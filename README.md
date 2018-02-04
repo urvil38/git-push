@@ -66,10 +66,17 @@ https://storage.googleapis.com/git-push/v0.2/windows/git-push.exe
     - For windows:
 
         you must set the HOME environment variable to your chosen path(I suggest `c:\git-push`)
-            
-        Under Windows, you may set environment variables through the "Environment Variables" 
-        button on the "Advanced" tab of the "System" control panel. Some versions of Windows 
-        provide this control panel through the "Advanced System Settings" option inside 
-        the "System" control panel.
+
+        You can do it by two way in windows:
+
+        -  Using `Command Prompt` you can set this environment variable by following command:
+            ```
+            set HOME="c:\git-push"
+            ```    
+        -  Under Windows, you may set environment variables through the "Environment Variables" 
+            button on the "Advanced" tab of the "System" control panel. Some versions of Windows 
+            provide this control panel through the "Advanced System Settings" option inside 
+            the "System" control panel.
+
 
 2. You also need `git` install on your machine.If you don't have download from [here](https://git-scm.com/downloads)    
