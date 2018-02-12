@@ -101,7 +101,7 @@ const (
 
 For linux and macos:
 
-	export $HOME=/path/to/home/where/git-push/can/store/credentials
+	export HOME=/path/to/home/where/git-push/can/store/credentials
 
 For windows:
 
