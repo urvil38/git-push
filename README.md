@@ -60,7 +60,7 @@ https://storage.googleapis.com/git-push/v0.2/windows/git-push.exe
         ```
         If it's return nothing then set HOME environment varible by following command:
         ```
-        $ export $HOME=/path/to/home/where/git-push/can/store/credentials
+        $ export HOME=/path/to/home/where/git-push/can/store/credentials
         ```
 
     - For windows:

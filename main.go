@@ -24,7 +24,7 @@ func init() {
 	colorYellow = color.New(color.FgYellow, color.Bold)
 	
 	home = os.Getenv("HOME")
-	if home == "" {
+	if home != "" {
 		fmt.Println(help)
 		os.Exit(0)
 	}
@@ -96,17 +96,26 @@ const (
 
 `
 	help      = `
----------------x configure x----------------
+***************************************| configure |******************************************
 
 For linux and macos:
-
-	export $HOME=/path/to/home/where/git-push/can/store/credentials
+-------------------
+	
+	export HOME=/path/to/home/where/git-push/can/store/credentials
 
 For windows:
-
-	you must set the HOME environment variable to your chosen path(I suggest c:\git-push)
+-----------
 	
-	Under Windows, you may set environment variables through the "Environment Variables" 
+	You must set the HOME environment variable to your chosen path(I suggest c:\git-push)
+
+	There are two ways to doing this:
+	---------------------------------
+
+	1. Using Command Prompt you can set this environment variable by following command:
+        
+        set HOME="c:\git-push" 
+	
+	2. Under Windows, you may set environment variables through the "Environment Variables" 
 	button on the "Advanced" tab of the "System" control panel. Some versions of Windows 
 	provide this control panel through the "Advanced System Settings" option inside 
 	the "System" control panel. 	
