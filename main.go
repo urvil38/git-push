@@ -29,8 +29,8 @@ func init() {
 		os.Exit(0)
 	}
 
-	userConfigFile = home + separator + ".config" + separator + "git-push" + separator + "userInfo"
-	configFolder = home + separator + ".config" + separator + "git-push"
+	userConfigFile = filepath.Join(home,".config","git-push","userInfo")
+	configFolder = filepath.Join(home,".config","git-push")
 	
 	createDir()
 	checkUserInfo()
@@ -95,7 +95,6 @@ const (
  # Github   :  https://github.com/urvil38
 
 `
-	separator = string(filepath.Separator)
 	help      = `
 ---------------x configure x----------------
 
@@ -183,7 +182,7 @@ func main() {
 
 		err = git.PushRepo(gitlab.GitLabURL, gitlab.GitlabUser, basicUserInfo)
 		if err != nil {
-			removeFileErr := os.Remove(configFolder + separator + "git-push-gitlab")
+			removeFileErr := os.Remove(filepath.Join(configFolder,"git-push-gitlab"))
 			if removeFileErr != nil {
 				colorRed.Println("Error: " + removeFileErr.Error())
 				os.Exit(0)

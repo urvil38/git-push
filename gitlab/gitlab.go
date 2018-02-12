@@ -20,7 +20,7 @@ import (
 func init() {
 	c = color.New(color.FgGreen, color.Bold)
 	home = os.Getenv("HOME")
-	configFilePath = home + separator + ".config" + separator + "git-push" + separator + "git-push-gitlab"
+	configFilePath = filepath.Join(home,".config","git-push","git-push-gitlab")
 	checkCredential()
 }
 
@@ -44,10 +44,6 @@ var (
 	home           string
 	configFilePath string
 	c              *color.Color
-)
-
-const (
-	separator = string(filepath.Separator)
 )
 
 func Init() error {
