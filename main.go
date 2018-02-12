@@ -24,7 +24,7 @@ func init() {
 	colorYellow = color.New(color.FgYellow, color.Bold)
 	
 	home = os.Getenv("HOME")
-	if home != "" {
+	if home == "" {
 		fmt.Println(help)
 		os.Exit(0)
 	}
