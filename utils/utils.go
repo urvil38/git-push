@@ -4,7 +4,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 
 	gogit "gopkg.in/src-d/go-git.v4"
 )
@@ -14,7 +13,7 @@ func GetCurrentWorkingDirName() string {
 	if err != nil {
 		return ""
 	}
-	cwdarr := strings.Split(cwd, string(filepath.Separator))
+	cwdarr := filepath.SplitList(cwd)
 	return cwdarr[len(cwdarr)-1:][0]
 }
 
@@ -23,7 +22,7 @@ func CreateFileInCurrentDir(filename string) (*os.File, error) {
 	if err != nil {
 		return nil, err
 	}
-	f, err := os.Create(cwd + string(filepath.Separator) + filename)
+	f, err := os.Create(filepath.Join(cwd,filename))
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +31,7 @@ func CreateFileInCurrentDir(filename string) (*os.File, error) {
 
 func CheckIfFileIsExist(filename string) bool {
 	cwd, err := os.Getwd()
-	if _, err = os.Stat(cwd + string(filepath.Separator) + filename); err == nil {
+	if _, err = os.Stat(filepath.Join(cwd,filename)); err == nil {
 		return true
 	}
 	return false

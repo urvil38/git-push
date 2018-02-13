@@ -21,7 +21,7 @@ import (
 func init() {
 	c = color.New(color.FgGreen, color.Bold)
 	home = os.Getenv("HOME")
-	configFilePath = home + separator + ".config" + separator + "git-push" + separator + "git-push-github"
+	configFilePath = filepath.Join(home,".config","git-push","git-push-github")
 	checkCredential()
 }
 
@@ -43,10 +43,6 @@ var (
 	GitURL         types.RepoURL
 	GithubUser     types.BasicAuth
 	c              *color.Color
-)
-
-const (
-	separator = string(filepath.Separator)
 )
 
 //Init function ask for github username and password for basic auth

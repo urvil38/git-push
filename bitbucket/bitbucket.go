@@ -19,7 +19,7 @@ import (
 func init() {
 	c = color.New(color.FgGreen, color.Bold)
 	home = os.Getenv("HOME")
-	configFilePath = home + separator + ".config" + separator + "git-push" + separator + "git-push-bitbucket"
+	configFilePath = filepath.Join(home,".config","git-push","git-push-bitbucket")
 	checkCredential()
 }
 
@@ -46,10 +46,6 @@ var (
 var (
 	errNotGetHTMLURL  = errors.New("Not get right type of html url value from responsse")
 	errNotGetCloneURL = errors.New("Not get right type of clone urls value from responsse")
-)
-
-const (
-	separator = string(filepath.Separator)
 )
 
 func Init() error {

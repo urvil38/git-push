@@ -70,6 +70,7 @@ https://storage.googleapis.com/git-push/v0.2/windows/git-push.exe
         You can do it by two way in windows:
 
         -  Using `Command Prompt` you can set this environment variable by following command:
+            
             ```
             set HOME="c:\git-push"
             ```    
