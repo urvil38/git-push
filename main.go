@@ -22,19 +22,19 @@ import (
 func init() {
 	colorRed = color.New(color.FgRed, color.Bold)
 	colorYellow = color.New(color.FgYellow, color.Bold)
-	
+
 	home = os.Getenv("HOME")
 	if home == "" {
 		fmt.Println(help)
 		os.Exit(0)
 	}
 
-	userConfigFile = filepath.Join(home,".config","git-push","userInfo")
-	configFolder = filepath.Join(home,".config","git-push")
-	
+	userConfigFile = filepath.Join(home, ".config", "git-push", "userInfo")
+	configFolder = filepath.Join(home, ".config", "git-push")
+
 	createDir()
 	checkUserInfo()
-	
+
 	remoteExists, _ = utils.CheckRemoteRepo()
 	if remoteExists {
 		colorRed.Println("Sorry, this tool will not help you because working repository is already on github or bitbucket or gitlab!")
@@ -76,6 +76,7 @@ var (
 	home           string
 	userConfigFile string
 	configFolder   string
+	version        string
 	colorRed       *color.Color
 	colorYellow    *color.Color
 )
@@ -90,12 +91,12 @@ const (
      	\/                                              \/      \/ 				 
 
  # Author   :  Urvil Patel
+ # Version  :  %s	
  # Twitter  :  @UrvilPatel12
- # Version  :  0.2.0	
  # Github   :  https://github.com/urvil38
 
 `
-	help      = `
+	help = `
 ***************************************| configure |******************************************
 
 For linux and macos:
@@ -124,8 +125,8 @@ For windows:
 
 func main() {
 
-	colorYellow.Println(banner)
-	
+	colorYellow.Println(fmt.Sprintf(banner, version))
+
 	if basicUserInfo.Email == "" || basicUserInfo.Name == "" {
 		err := survey.Ask(questions.UserInfo, &basicUserInfo)
 		if err != nil {
@@ -137,14 +138,14 @@ func main() {
 			return
 		}
 	}
-	
+
 	var serviceName string
 	err = survey.Ask(questions.ServiceName, &serviceName)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	
+
 	var repo types.Repo
 	if !remoteExists {
 		err = survey.Ask(questions.GithubRepoInfo, &repo)
@@ -191,7 +192,7 @@ func main() {
 
 		err = git.PushRepo(gitlab.GitLabURL, gitlab.GitlabUser, basicUserInfo)
 		if err != nil {
-			removeFileErr := os.Remove(filepath.Join(configFolder,"git-push-gitlab"))
+			removeFileErr := os.Remove(filepath.Join(configFolder, "git-push-gitlab"))
 			if removeFileErr != nil {
 				colorRed.Println("Error: " + removeFileErr.Error())
 				os.Exit(0)
