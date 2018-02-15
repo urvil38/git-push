@@ -3,7 +3,7 @@
 
 ![git-push gif](https://storage.googleapis.com/git-push/gif/git-push.gif)
 
-- If you want to build git-push right away ,you need a working [Go environment](https://golang.org/doc/install). 
+- If you want to build git-push right away ,you need a working [Go environment](https://golang.org/doc/install).
 ```
 $ go get github.com/urvil38/git-push
 $ go install
@@ -17,13 +17,13 @@ $ go build
     #### Linux:
 
     ```
-    $ curl -LO https://storage.googleapis.com/git-push/v0.2/linux/git-push 
+    $ curl -LO https://storage.googleapis.com/git-push/v0.4/linux/git-push 
     ```
 
     #### MacOs:
 
     ```
-    $ curl -LO https://storage.googleapis.com/git-push/v0.2/darwin/git-push
+    $ curl -LO https://storage.googleapis.com/git-push/v0.4/darwin/git-push
     ```
 
 2. Make binary executable :
@@ -45,7 +45,7 @@ You can download this binary from this url using your browser:
 Go to this URL for download git-push:
 
 ```
-https://storage.googleapis.com/git-push/v0.2/windows/git-push.exe
+https://storage.googleapis.com/git-push/v0.4/windows/git-push.exe
 ```
 
 ## Prerequisite:
@@ -80,4 +80,4 @@ https://storage.googleapis.com/git-push/v0.2/windows/git-push.exe
             the "System" control panel.
 
 
-2. You also need `git` install on your machine.If you don't have download from [here](https://git-scm.com/downloads)    
+2. You also need `git` install on your machine.If you don't have download from [here](https://git-scm.com/downloads).  
