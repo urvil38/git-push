@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"strings"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -13,7 +14,7 @@ func GetCurrentWorkingDirName() string {
 	if err != nil {
 		return ""
 	}
-	cwdarr := filepath.SplitList(cwd)
+	cwdarr := strings.Split(cwd,string(filepath.Separator))
 	return cwdarr[len(cwdarr)-1:][0]
 }
 
