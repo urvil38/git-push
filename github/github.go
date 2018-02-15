@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/google/go-github/github"
@@ -16,12 +17,13 @@ import (
 	"github.com/urvil38/git-push/questions"
 	"github.com/urvil38/git-push/types"
 	"gopkg.in/AlecAivazis/survey.v1"
+	"github.com/briandowns/spinner"
 )
 
 func init() {
 	c = color.New(color.FgGreen, color.Bold)
 	home = os.Getenv("HOME")
-	configFilePath = filepath.Join(home,".config","git-push","git-push-github")
+	configFilePath = filepath.Join(home, ".config", "git-push", "git-push-github")
 	checkCredential()
 }
 
@@ -56,14 +58,19 @@ func Init() error {
 		fmt.Println(err)
 	}
 
-	err = authenticateUser()
+	s := spinner.New(spinner.CharSets[11], 100*time.Millisecond)
+	s.Color("yellow")
+	s.Suffix = " Authenticating You ⚡"
+	s.Start()
+
+	err = authenticateUser(s)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func authenticateUser() error {
+func authenticateUser(s *spinner.Spinner) error {
 	tp := github.BasicAuthTransport{
 		Username: GithubUser.Username,
 		Password: GithubUser.Password,
@@ -72,9 +79,10 @@ func authenticateUser() error {
 	ctx := context.Background()
 	_, _, err := client.Users.Get(ctx, "")
 	if err != nil {
+		s.Stop()
 		return errors.New("Invalid username or password ✗")
 	}
-
+	s.Stop()
 	c.Println("=> You authenticated successfully ✓")
 
 	b := new(bytes.Buffer)
@@ -102,8 +110,13 @@ func CreateRepo(repo types.Repo) error {
 		Description: github.String(repo.RepoDescription),
 		Private:     github.Bool(repo.RepoType == "Private"),
 	}
+	s := spinner.New(spinner.CharSets[11], 50*time.Millisecond)
+	s.Color("yellow")
+	s.Suffix = " Fetching Repo URL from Github ⚡"
+	s.Start()
 	repository, _, err := client.Repositories.Create(ctx, "", r)
 	if err != nil {
+		s.Stop()
 		if strings.Contains(err.Error(), "exists") {
 			return errors.New("Error: Same name of repository is exists on your account")
 		}
@@ -120,6 +133,7 @@ func CreateRepo(repo types.Repo) error {
 		CloneURL: stringify(repository.CloneURL),
 		SSHURL:   stringify(repository.SSHURL),
 	}
+	s.Stop()
 	c.Println("=> " + GitURL.HTMLURL)
 	return nil
 }

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
 	"github.com/urvil38/git-push/questions"
 	"github.com/urvil38/git-push/types"
@@ -97,12 +98,21 @@ func PushRepo(gitURL types.RepoURL, user types.BasicAuth, basicUserInfo types.Ba
 			Username: user.Username,
 			Password: user.Password,
 		}
+
+		s := spinner.New(spinner.CharSets[11], 50*time.Millisecond)
+		s.Color("yellow")
+		s.Suffix = " Working hard to pushing your Repository ⚡" // Set the spinner color to red
+		s.Start()
+
 		err = r.Push(&gogit.PushOptions{
 			Auth: &auth,
 		})
 		if err != nil {
+			s.Stop()
 			return errors.New("ERROR: Unable to push repository.Please check your username or password are correct ℹ")
 		}
+
+		s.Stop()
 		c.Println("=> Successfully Pushed Repository ✓")
 		return nil
 	}

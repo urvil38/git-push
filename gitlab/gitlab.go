@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/urvil38/git-push/encoding"
@@ -15,12 +16,13 @@ import (
 	"github.com/urvil38/git-push/types"
 	"github.com/xanzy/go-gitlab"
 	"gopkg.in/AlecAivazis/survey.v1"
+	"github.com/briandowns/spinner"
 )
 
 func init() {
 	c = color.New(color.FgGreen, color.Bold)
 	home = os.Getenv("HOME")
-	configFilePath = filepath.Join(home,".config","git-push","git-push-gitlab")
+	configFilePath = filepath.Join(home, ".config", "git-push", "git-push-gitlab")
 	checkCredential()
 }
 
@@ -60,7 +62,12 @@ func Init() error {
 		}
 	}
 
-	user, err := checkToken()
+	s := spinner.New(spinner.CharSets[11], 100*time.Millisecond)
+	s.Color("yellow")
+	s.Suffix = " Authenticating You ⚡"
+	s.Start()
+
+	user, err := checkToken(s)
 	if err != nil {
 		return err
 	}
@@ -79,21 +86,23 @@ func Init() error {
 	return nil
 }
 
-func checkToken() (*gitlab.User, error) {
+func checkToken(s *spinner.Spinner) (*gitlab.User, error) {
 	client = gitlab.NewClient(nil, GitlabToken.Token)
 
 	user, response, err := client.Users.CurrentUser()
 
 	if err != nil {
+		s.Stop()
 		if response == nil {
 			return nil, errors.New("ERROR: Please check your internet connection ℹ .")
 		}
 	}
 
 	if err != nil || user == nil {
+		s.Stop()
 		return nil, errors.New("Invalid token ✗")
 	}
-
+	s.Stop()
 	c.Println("=> Valid Token ✓")
 	return user, nil
 }
@@ -121,12 +130,19 @@ func authenticateUser(user *gitlab.User) error {
 
 func CreateRepo(repo types.Repo) error {
 	client = gitlab.NewClient(nil, GitlabToken.Token)
+
+	s := spinner.New(spinner.CharSets[11], 50*time.Millisecond)
+	s.Color("yellow")
+	s.Suffix = " Fetching Repo URL from GitLab ⚡"
+	s.Start()
+
 	project, response, err := client.Projects.CreateProject(&gitlab.CreateProjectOptions{
 		Name:        gitlab.String(repo.RepoName),
 		Description: gitlab.String(repo.RepoDescription),
 		Visibility:  gitlab.Visibility(gitlab.VisibilityValue(strings.ToLower(repo.RepoType))),
 	})
 	if err != nil {
+		s.Stop()
 		if response != nil {
 			if response.StatusCode == 400 {
 				return errors.New("Error: Same name of repository is exists on your account")
@@ -139,6 +155,7 @@ func CreateRepo(repo types.Repo) error {
 	GitLabURL.CloneURL = project.HTTPURLToRepo
 	GitLabURL.SSHURL = project.SSHURLToRepo
 
+	s.Stop()
 	c.Println("=> " + GitLabURL.HTMLURL)
 
 	return nil

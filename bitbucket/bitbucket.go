@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/ktrysmt/go-bitbucket"
@@ -14,12 +15,13 @@ import (
 	"github.com/urvil38/git-push/questions"
 	"github.com/urvil38/git-push/types"
 	"gopkg.in/AlecAivazis/survey.v1"
+	"github.com/briandowns/spinner"
 )
 
 func init() {
 	c = color.New(color.FgGreen, color.Bold)
 	home = os.Getenv("HOME")
-	configFilePath = filepath.Join(home,".config","git-push","git-push-bitbucket")
+	configFilePath = filepath.Join(home, ".config", "git-push", "git-push-bitbucket")
 	checkCredential()
 }
 
@@ -58,20 +60,27 @@ func Init() error {
 	if err != nil {
 		return err
 	}
-	err = authenticateUser()
+
+	s := spinner.New(spinner.CharSets[11], 100*time.Millisecond)
+	s.Color("yellow")
+	s.Suffix = " Authenticating You ⚡"
+	s.Start()
+
+	err = authenticateUser(s)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func authenticateUser() error {
+func authenticateUser(s *spinner.Spinner) error {
 	client = bitbucket.NewBasicAuth(BitbucketUser.Username, BitbucketUser.Password)
 	user, err := client.Users.Get(BitbucketUser.Username)
 	if user == nil || err != nil {
+		s.Stop()
 		return errors.New("Invalid username or password ✗")
 	}
-
+	s.Stop()
 	c.Println("=> You authenticated successfully ✓")
 
 	b := new(bytes.Buffer)
@@ -88,6 +97,12 @@ func authenticateUser() error {
 
 func CreateRepo(repo types.Repo) error {
 	client = bitbucket.NewBasicAuth(BitbucketUser.Username, BitbucketUser.Password)
+
+	s := spinner.New(spinner.CharSets[11], 50*time.Millisecond)
+	s.Color("yellow")
+	s.Suffix = " Fetching Repo URL from BitBucket ⚡"
+	s.Start()
+
 	r, err := client.Repositories.Repository.Create(&bitbucket.RepositoryOptions{
 		Owner:       BitbucketUser.Username,
 		Repo_slug:   repo.RepoName,
@@ -95,10 +110,20 @@ func CreateRepo(repo types.Repo) error {
 		Is_private:  formatBool(repo.RepoType == "Private"),
 	})
 	if err != nil {
+		s.Stop()
 		return errors.New("Error:Couldn't create repository.Make sure you don't have same repository name on bitbucket or Please check your internet connection❗")
 	}
-	typeCheckHTMLURL(r)
-	typeCheckCloneURL(r)
+	err = typeCheckHTMLURL(r)
+	if err != nil {
+		s.Stop()
+		return err
+	}
+	err = typeCheckCloneURL(r)
+	if err != nil {
+		s.Stop()
+		return err
+	}
+	s.Stop()
 	c.Println("=> " + BitbuckerURL.HTMLURL)
 	return nil
 }
@@ -127,7 +152,7 @@ func typeCheckHTMLURL(r *bitbucket.Repository) error {
 	return nil
 }
 
-func typeCheckCloneURL(r *bitbucket.Repository) {
+func typeCheckCloneURL(r *bitbucket.Repository) error {
 	value := r.Links["clone"]
 	values, ok := value.([]interface{})
 	checkErrCloneURL(ok)
@@ -143,6 +168,7 @@ func typeCheckCloneURL(r *bitbucket.Repository) {
 			checkErrCloneURL(ok)
 		}
 	}
+	return nil
 }
 
 func formatBool(b bool) string {

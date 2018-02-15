@@ -94,7 +94,6 @@ const (
  # Version  :  %s	
  # Twitter  :  @UrvilPatel12
  # Github   :  https://github.com/urvil38
-
 `
 	help = `
 ***************************************| configure |******************************************
