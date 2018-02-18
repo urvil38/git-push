@@ -11,13 +11,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
 	"github.com/google/go-github/github"
 	"github.com/urvil38/git-push/encoding"
 	"github.com/urvil38/git-push/questions"
 	"github.com/urvil38/git-push/types"
 	"gopkg.in/AlecAivazis/survey.v1"
-	"github.com/briandowns/spinner"
 )
 
 func init() {
@@ -110,10 +110,12 @@ func CreateRepo(repo types.Repo) error {
 		Description: github.String(repo.RepoDescription),
 		Private:     github.Bool(repo.RepoType == "Private"),
 	}
+
 	s := spinner.New(spinner.CharSets[11], 50*time.Millisecond)
 	s.Color("yellow")
 	s.Suffix = " Fetching Repo URL from Github ⚡"
 	s.Start()
+
 	repository, _, err := client.Repositories.Create(ctx, "", r)
 	if err != nil {
 		s.Stop()
@@ -123,16 +125,19 @@ func CreateRepo(repo types.Repo) error {
 		if strings.Contains(err.Error(), "private") {
 			return errors.New("Error: Please upgrade your plan to create a new private repository")
 		}
-		return errors.New("Error while creating repository.Please check your internet connection❗")
+		return errors.New("Error while creating repository.Please check your internet connection ℹ")
 	}
+
 	stringify := func(str *string) string {
 		return strings.Trim(github.Stringify(str), "\"")
 	}
+
 	GitURL = types.RepoURL{
 		HTMLURL:  stringify(repository.HTMLURL),
 		CloneURL: stringify(repository.CloneURL),
 		SSHURL:   stringify(repository.SSHURL),
 	}
+
 	s.Stop()
 	c.Println("=> " + GitURL.HTMLURL)
 	return nil

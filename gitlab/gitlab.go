@@ -94,7 +94,7 @@ func checkToken(s *spinner.Spinner) (*gitlab.User, error) {
 	if err != nil {
 		s.Stop()
 		if response == nil {
-			return nil, errors.New("ERROR: Please check your internet connection ℹ .")
+			return nil, errors.New("ERROR: Please check your internet connection ℹ ")
 		}
 	}
 

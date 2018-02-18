@@ -11,7 +11,7 @@ var ServiceName = []*survey.Question{
 		Name: "servicename",
 		Prompt: &survey.Select{
 			Message: "Pleasse select a service you want to use:",
-			Options: []string{"GitHub", "BitBucket","GitLab"},
+			Options: []string{"GitHub", "BitBucket", "GitLab"},
 			Default: "GitHub",
 		},
 	},
@@ -77,7 +77,7 @@ var GitlabToken = []*survey.Question{
 		Name: "token",
 		Prompt: &survey.Password{
 			Message: "Enter your GitLab Token:",
-			Help: "You need to provide gitlab OAuth token here",
+			Help:    "You need to provide gitlab OAuth token here",
 		},
 		Validate: survey.Required,
 	},
@@ -141,7 +141,7 @@ var CreateGitIgnore = []*survey.Question{
 		Name: "gitignorefile",
 		Prompt: &survey.Editor{
 			Message:       "Please add files you want to ignore for git",
-			Default:       "node_modules\n*.gem\n*.rbc",
+			Default:       "node_modules\n*.gem\n*.rbc\n.vscode\n.idea\n",
 			HideDefault:   true,
 			AppendDefault: true,
 		},

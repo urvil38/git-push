@@ -111,7 +111,7 @@ func CreateRepo(repo types.Repo) error {
 	})
 	if err != nil {
 		s.Stop()
-		return errors.New("Error:Couldn't create repository.Make sure you don't have same repository name on bitbucket or Please check your internet connection❗")
+		return errors.New("Error:Couldn't create repository.Make sure you don't have same repository name on bitbucket or Please check your internet connection ℹ")
 	}
 	err = typeCheckHTMLURL(r)
 	if err != nil {

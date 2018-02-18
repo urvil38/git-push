@@ -31,7 +31,7 @@ var (
 )
 
 func CreateGitIgnoreFile() error {
-	gitignore := false
+	var gitignore bool
 	if utils.CheckIfFileIsExist(".gitignore") {
 		return nil
 	}
@@ -79,10 +79,12 @@ func PushRepo(gitURL types.RepoURL, user types.BasicAuth, basicUserInfo types.Ba
 		if err != nil {
 			return err
 		}
+
 		err = utils.GitAddAll()
 		if err != nil {
 			return err
 		}
+
 		_, err = w.Commit("Initial Commit", &gogit.CommitOptions{
 			Author: &object.Signature{
 				Name:  basicUserInfo.Name,
@@ -101,7 +103,7 @@ func PushRepo(gitURL types.RepoURL, user types.BasicAuth, basicUserInfo types.Ba
 
 		s := spinner.New(spinner.CharSets[11], 50*time.Millisecond)
 		s.Color("yellow")
-		s.Suffix = " Working hard to pushing your Repository ⚡" // Set the spinner color to red
+		s.Suffix = " Working hard to pushing your Repository ⚡"
 		s.Start()
 
 		err = r.Push(&gogit.PushOptions{

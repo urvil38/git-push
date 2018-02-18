@@ -20,8 +20,8 @@ import (
 )
 
 func init() {
-	colorRed = color.New(color.FgRed, color.Bold)
-	colorYellow = color.New(color.FgYellow, color.Bold)
+	red = color.New(color.FgRed, color.Bold).SprintFunc()
+	yellow = color.New(color.FgYellow, color.Bold).SprintFunc()
 
 	home = os.Getenv("HOME")
 	if home == "" {
@@ -37,10 +37,10 @@ func init() {
 
 	remoteExists, _ = utils.CheckRemoteRepo()
 	if remoteExists {
-		colorRed.Println("Sorry, this tool will not help you because working repository is already on github or bitbucket or gitlab!")
-		colorRed.Print("ℹ  You can use ")
-		colorYellow.Print("$ git push origin master")
-		colorRed.Println(" to push changes.")
+		fmt.Printf("%s%s%s\n",
+			red("Sorry, this tool will not help you because working repository is already on github or bitbucket or gitlab!\nℹ You can use "),
+			yellow("$ git push origin master"),
+			red(" to push changes."))
 		os.Exit(0)
 	}
 }
@@ -64,7 +64,7 @@ func createDir() {
 
 func checkerror(err error) {
 	if err != nil {
-		colorRed.Println("=> " + err.Error())
+		fmt.Printf("%s\n", red("=> "+err.Error()))
 		os.Exit(0)
 	}
 }
@@ -77,8 +77,8 @@ var (
 	userConfigFile string
 	configFolder   string
 	version        string
-	colorRed       *color.Color
-	colorYellow    *color.Color
+	red            func(...interface{}) string
+	yellow         func(...interface{}) string
 )
 
 const (
@@ -124,7 +124,7 @@ For windows:
 
 func main() {
 
-	colorYellow.Println(fmt.Sprintf(banner, version))
+	fmt.Printf("%s\n", yellow(fmt.Sprintf(banner, version)))
 
 	if basicUserInfo.Email == "" || basicUserInfo.Name == "" {
 		err := survey.Ask(questions.UserInfo, &basicUserInfo)
@@ -193,7 +193,7 @@ func main() {
 		if err != nil {
 			removeFileErr := os.Remove(filepath.Join(configFolder, "git-push-gitlab"))
 			if removeFileErr != nil {
-				colorRed.Println("Error: " + removeFileErr.Error())
+				fmt.Printf("%s\n", red("Error: "+removeFileErr.Error()))
 				os.Exit(0)
 			}
 		}
