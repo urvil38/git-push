@@ -5,16 +5,12 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/urvil38/git-push/bitbucket"
-	"github.com/urvil38/git-push/github"
-	"github.com/urvil38/git-push/gitlab"
+	"github.com/urvil38/git-push/utils"
 	"github.com/urvil38/git-push/questions"
 	"github.com/urvil38/git-push/types"
-	"github.com/urvil38/git-push/utils"
 	"gopkg.in/AlecAivazis/survey.v1"
 )
 
@@ -22,16 +18,14 @@ func init() {
 	red = color.New(color.FgRed, color.Bold).SprintFunc()
 	yellow = color.New(color.FgYellow, color.Bold).SprintFunc()
 
-	home = os.Getenv("HOME")
-	if home == "" {
-		fmt.Println(help)
-		os.Exit(0)
+	userConfigFile = utils.GetConfigFilePath()
+	configFolder = utils.GetConfigFolderPath()
+
+	err := utils.CreateDir(configFolder)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	userConfigFile = filepath.Join(home, ".config", "git-push", "userInfo")
-	configFolder = filepath.Join(home, ".config", "git-push")
-
-	createDir()
 	checkUserInfo()
 
 	remoteExists, _ = utils.CheckRemoteRepo()
@@ -52,20 +46,6 @@ func checkUserInfo() {
 	userInfo := strings.Split(string(b), "\n")
 	basicUserInfo.Name = userInfo[0]
 	basicUserInfo.Email = userInfo[1]
-}
-
-func createDir() {
-	err := os.MkdirAll(configFolder, 0777)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func checkerror(err error) {
-	if err != nil {
-		fmt.Printf("%s\n", red("=> "+err.Error()))
-		os.Exit(0)
-	}
 }
 
 var (
@@ -93,31 +73,6 @@ const (
  # Version  :  %s	
  # Twitter  :  @UrvilPatel12
  # Github   :  https://github.com/urvil38
-`
-	help = `
-***************************************| configure |******************************************
-
-For linux and macos:
--------------------
-	
-	export HOME=/path/to/home/where/git-push/can/store/credentials
-
-For windows:
------------
-	
-	You must set the HOME environment variable to your chosen path(I suggest c:\git-push)
-
-	There are two ways to doing this:
-	---------------------------------
-
-	1. Using Command Prompt you can set this environment variable by following command:
-        
-        set HOME="c:\git-push" 
-	
-	2. Under Windows, you may set environment variables through the "Environment Variables" 
-	button on the "Advanced" tab of the "System" control panel. Some versions of Windows 
-	provide this control panel through the "Advanced System Settings" option inside 
-	the "System" control panel. 	
 `
 )
 
@@ -153,40 +108,13 @@ func main() {
 		}
 	}
 
-	switch serviceName {
-	case "GitHub":
-		err := service(github.GithubService,repo)
-		checkerror(err)
-	case "BitBucket":
-		err := service(bitbucket.BitbucketService,repo)
-		checkerror(err)
-	case "GitLab":
-		err := service(gitlab.GitlabService,repo)
-		if err.Error() == "giterror" {
-			fmt.Printf("%s\n", red("Error: "+"Please check gitlab username or password are correct"))
-			removeFileErr := os.Remove(filepath.Join(configFolder, "git-push-gitlab"))
-			if removeFileErr != nil {
-				fmt.Printf("%s\n", red("Error: "+removeFileErr.Error()))
-				os.Exit(0)
-			}
-			os.Exit(1)
-		}
-		checkerror(err)
-	}
+	err := invokeService(serviceName,repo)
+	checkerror(err)
 }
 
-func service(service types.Service,repo types.Repo) error {
-	if err := service.Init(); err != nil {
-		return err
+func checkerror(err error) {
+	if err != nil {
+		fmt.Printf("%s\n", red("=> "+err.Error()))
+		os.Exit(0)
 	}
-	
-	if err := service.CreateRepo(repo); err != nil {
-		return err
-	}
-
-	if err := service.CreateGitIgnoreFile(); err != nil {
-		return err
-	}
-
-	return service.PushRepo()
 }
