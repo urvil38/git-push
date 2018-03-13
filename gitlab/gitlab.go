@@ -1,6 +1,7 @@
 package gitlab
 
 import (
+	"github.com/urvil38/git-push/git"
 	"bytes"
 	"errors"
 	"fmt"
@@ -33,30 +34,35 @@ func checkCredential() {
 	}
 	b = encoding.Decode(string(b))
 	credentials := strings.Split(string(b), "\n")
-	GitlabToken.Token = credentials[0]
-	GitlabUser.Username = credentials[1]
-	GitlabUser.Password = credentials[2]
+	GitlabService.gitlabToken.Token = credentials[0]
+	GitlabService.gitlabUser.Username = credentials[1]
+	GitlabService.gitlabUser.Password = credentials[2]
 }
 
 var (
-	GitlabUser     types.BasicAuth
-	GitlabToken    types.OAuth
-	GitLabURL      types.RepoURL
 	client         *gitlab.Client
 	home           string
 	configFilePath string
 	c              *color.Color
+	GitlabService gitlabService
 )
 
-func Init() error {
+type gitlabService struct {
+	gitlabUser types.BasicAuth
+	gitlabToken types.OAuth
+	basicUserInfo types.BasicUserInfo
+	gitlabURL types.RepoURL
+}
 
-	if GitlabToken.Token != "" || GitlabUser.Username != "" || GitlabUser.Password != "" {
+func (g gitlabService) Init() error {
+
+	if GitlabService.gitlabToken.Token != "" || GitlabService.gitlabUser.Username != "" || GitlabService.gitlabUser.Password != "" {
 		c.Println("=> You authenticated successfully ✓")
 		return nil
 	}
 
-	if GitlabToken.Token == "" {
-		err := survey.Ask(questions.GitlabToken, &GitlabToken)
+	if GitlabService.gitlabToken.Token == "" {
+		err := survey.Ask(questions.GitlabToken, &GitlabService.gitlabToken)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -72,8 +78,8 @@ func Init() error {
 		return err
 	}
 
-	if GitlabUser.Username == "" || GitlabUser.Password == "" {
-		err := survey.Ask(questions.GitlabCredential, &GitlabUser)
+	if GitlabService.gitlabUser.Username == "" || GitlabService.gitlabUser.Password == "" {
+		err := survey.Ask(questions.GitlabCredential, &GitlabService.gitlabUser)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -87,7 +93,7 @@ func Init() error {
 }
 
 func checkToken(s *spinner.Spinner) (*gitlab.User, error) {
-	client = gitlab.NewClient(nil, GitlabToken.Token)
+	client = gitlab.NewClient(nil, GitlabService.gitlabToken.Token)
 
 	user, response, err := client.Users.CurrentUser()
 
@@ -109,14 +115,14 @@ func checkToken(s *spinner.Spinner) (*gitlab.User, error) {
 
 func authenticateUser(user *gitlab.User) error {
 
-	if user.Username != GitlabUser.Username {
+	if user.Username != GitlabService.gitlabUser.Username {
 		return errors.New("Invalid username of password ✗")
 	}
 
 	c.Println("=> You authenticated successfully ✓")
 
 	b := new(bytes.Buffer)
-	b.WriteString(GitlabToken.Token + "\n" + GitlabUser.Username + "\n" + GitlabUser.Password)
+	b.WriteString(GitlabService.gitlabToken.Token + "\n" + GitlabService.gitlabUser.Username + "\n" + GitlabService.gitlabUser.Password)
 
 	Estr := encoding.Encode(b.Bytes())
 
@@ -128,8 +134,8 @@ func authenticateUser(user *gitlab.User) error {
 	return nil
 }
 
-func CreateRepo(repo types.Repo) error {
-	client = gitlab.NewClient(nil, GitlabToken.Token)
+func (g gitlabService) CreateRepo(repo types.Repo) error {
+	client = gitlab.NewClient(nil, GitlabService.gitlabToken.Token)
 
 	s := spinner.New(spinner.CharSets[11], 50*time.Millisecond)
 	s.Color("yellow")
@@ -151,12 +157,28 @@ func CreateRepo(repo types.Repo) error {
 		return errors.New("ERROR: Unable to create repo on gitlab.Please check your internet connection ℹ .")
 	}
 
-	GitLabURL.HTMLURL = project.WebURL
-	GitLabURL.CloneURL = project.HTTPURLToRepo
-	GitLabURL.SSHURL = project.SSHURLToRepo
+	GitlabService.gitlabURL.HTMLURL = project.WebURL
+	GitlabService.gitlabURL.CloneURL = project.HTTPURLToRepo
+	GitlabService.gitlabURL.SSHURL = project.SSHURLToRepo
 
 	s.Stop()
-	c.Println("=> " + GitLabURL.HTMLURL)
+	c.Println("=> " + GitlabService.gitlabURL.HTMLURL)
 
 	return nil
 }
+
+func (g gitlabService) CreateGitIgnoreFile() error {
+	return git.CreateGitIgnoreFile()
+}
+
+func (g gitlabService) PushRepo() error {
+	var userConfigFile = filepath.Join(home, ".config", "git-push", "userInfo")
+	b, err := ioutil.ReadFile(userConfigFile)
+	if err != nil {
+		return err
+	}
+	userInfo := strings.Split(string(b), "\n")
+	GitlabService.basicUserInfo.Name = userInfo[0]
+	GitlabService.basicUserInfo.Email = userInfo[1]
+	return git.PushRepo(GitlabService.gitlabURL,GitlabService.gitlabUser,GitlabService.basicUserInfo)
+} 

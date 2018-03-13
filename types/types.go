@@ -25,3 +25,10 @@ type RepoURL struct {
 	CloneURL string
 	SSHURL string
 }
+
+type Service interface {
+	Init() error
+	CreateRepo(Repo) error
+	CreateGitIgnoreFile() error
+	PushRepo() error
+}

@@ -10,7 +10,6 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/urvil38/git-push/bitbucket"
-	"github.com/urvil38/git-push/git"
 	"github.com/urvil38/git-push/github"
 	"github.com/urvil38/git-push/gitlab"
 	"github.com/urvil38/git-push/questions"
@@ -156,47 +155,32 @@ func main() {
 
 	switch serviceName {
 	case "GitHub":
-		err := github.Init()
-		checkerror(err)
-
-		err = github.CreateRepo(repo)
-		checkerror(err)
-
-		err = git.CreateGitIgnoreFile()
-		checkerror(err)
-
-		err = git.PushRepo(github.GitURL, github.GithubUser, basicUserInfo)
+		err := service(github.GithubService,repo)
 		checkerror(err)
 	case "BitBucket":
-		err := bitbucket.Init()
-		checkerror(err)
-
-		err = bitbucket.CreateRepo(repo)
-		checkerror(err)
-
-		err = git.CreateGitIgnoreFile()
-		checkerror(err)
-
-		err = git.PushRepo(bitbucket.BitbuckerURL, bitbucket.BitbucketUser, basicUserInfo)
+		err := service(bitbucket.BitbucketService,repo)
 		checkerror(err)
 	case "GitLab":
-		err := gitlab.Init()
-		checkerror(err)
-
-		err = gitlab.CreateRepo(repo)
-		checkerror(err)
-
-		err = git.CreateGitIgnoreFile()
-		checkerror(err)
-
-		err = git.PushRepo(gitlab.GitLabURL, gitlab.GitlabUser, basicUserInfo)
-		if err != nil {
-			removeFileErr := os.Remove(filepath.Join(configFolder, "git-push-gitlab"))
-			if removeFileErr != nil {
-				fmt.Printf("%s\n", red("Error: "+removeFileErr.Error()))
-				os.Exit(0)
-			}
-		}
+		err := service(gitlab.GitlabService,repo)
 		checkerror(err)
 	}
+}
+
+func service(service types.Service,repo types.Repo) error {
+	if err := service.Init(); err != nil {
+		return err
+	}
+	
+	if err := service.CreateRepo(repo); err != nil {
+		return err
+	}
+
+	if err := service.CreateGitIgnoreFile(); err != nil {
+		return err
+	}
+
+	if err := service.PushRepo(); err != nil {
+		return err
+	}
+	return nil
 }

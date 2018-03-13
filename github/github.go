@@ -11,6 +11,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/urvil38/git-push/git"
+
 	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
 	"github.com/google/go-github/github"
@@ -34,26 +36,31 @@ func checkCredential() {
 	}
 	b = encoding.Decode(string(b))
 	credentials := strings.Split(string(b), "\n")
-	GithubUser.Username = credentials[0]
-	GithubUser.Password = credentials[1]
+	GithubService.githubUser.Username = credentials[0]
+	GithubService.githubUser.Password = credentials[1]
 }
 
 var (
 	home           string
 	client         *github.Client
 	configFilePath string
-	GitURL         types.RepoURL
-	GithubUser     types.BasicAuth
 	c              *color.Color
+	GithubService  githubservice
 )
 
+type githubservice struct {
+	gitURL        types.RepoURL
+	githubUser    types.BasicAuth
+	basicUserInfo types.BasicUserInfo
+}
+
 //Init function ask for github username and password for basic auth
-func Init() error {
-	if GithubUser.Username != "" || GithubUser.Password != "" {
+func (g githubservice) Init() error {
+	if GithubService.githubUser.Username != "" || GithubService.githubUser.Password != "" {
 		c.Println("=> You authenticated successfully ✓")
 		return nil
 	}
-	err := survey.Ask(questions.GithubCredential, &GithubUser)
+	err := survey.Ask(questions.GithubCredential, &GithubService.githubUser)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -63,17 +70,17 @@ func Init() error {
 	s.Suffix = " Authenticating You ⚡"
 	s.Start()
 
-	err = authenticateUser(s)
+	err = g.authenticateUser(s)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func authenticateUser(s *spinner.Spinner) error {
+func (g githubservice) authenticateUser(s *spinner.Spinner) error {
 	tp := github.BasicAuthTransport{
-		Username: GithubUser.Username,
-		Password: GithubUser.Password,
+		Username: GithubService.githubUser.Username,
+		Password: GithubService.githubUser.Password,
 	}
 	client = github.NewClient(tp.Client())
 	ctx := context.Background()
@@ -86,7 +93,7 @@ func authenticateUser(s *spinner.Spinner) error {
 	c.Println("=> You authenticated successfully ✓")
 
 	b := new(bytes.Buffer)
-	b.WriteString(GithubUser.Username + "\n" + GithubUser.Password)
+	b.WriteString(GithubService.githubUser.Username + "\n" + GithubService.githubUser.Password)
 
 	sEnc := encoding.Encode(b.Bytes())
 
@@ -98,10 +105,10 @@ func authenticateUser(s *spinner.Spinner) error {
 	return nil
 }
 
-func CreateRepo(repo types.Repo) error {
+func (g githubservice) CreateRepo(repo types.Repo) error {
 	tp := github.BasicAuthTransport{
-		Username: GithubUser.Username,
-		Password: GithubUser.Password,
+		Username: GithubService.githubUser.Username,
+		Password: GithubService.githubUser.Password,
 	}
 	client = github.NewClient(tp.Client())
 	ctx := context.Background()
@@ -113,7 +120,7 @@ func CreateRepo(repo types.Repo) error {
 
 	s := spinner.New(spinner.CharSets[11], 50*time.Millisecond)
 	s.Color("yellow")
-	s.Suffix = " Fetching Repo URL from Github ⚡"
+	s.Suffix = " Fetching Repo URL from githubservice ⚡"
 	s.Start()
 
 	repository, _, err := client.Repositories.Create(ctx, "", r)
@@ -132,13 +139,29 @@ func CreateRepo(repo types.Repo) error {
 		return strings.Trim(github.Stringify(str), "\"")
 	}
 
-	GitURL = types.RepoURL{
+	GithubService.gitURL = types.RepoURL{
 		HTMLURL:  stringify(repository.HTMLURL),
 		CloneURL: stringify(repository.CloneURL),
 		SSHURL:   stringify(repository.SSHURL),
 	}
 
 	s.Stop()
-	c.Println("=> " + GitURL.HTMLURL)
+	c.Println("=> " + GithubService.gitURL.HTMLURL)
 	return nil
+}
+
+func (g githubservice) CreateGitIgnoreFile() error {
+	return git.CreateGitIgnoreFile()
+}
+
+func (g githubservice) PushRepo() error {
+	var userConfigFile = filepath.Join(home, ".config", "git-push", "userInfo")
+	b, err := ioutil.ReadFile(userConfigFile)
+	if err != nil {
+		return err
+	}
+	userInfo := strings.Split(string(b), "\n")
+	GithubService.basicUserInfo.Name = userInfo[0]
+	GithubService.basicUserInfo.Email = userInfo[1]
+	return git.PushRepo(GithubService.gitURL, GithubService.githubUser, GithubService.basicUserInfo)
 }
