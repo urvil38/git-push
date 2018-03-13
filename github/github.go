@@ -6,13 +6,12 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/urvil38/git-push/git"
-
+	"github.com/urvil38/git-push/utils"
 	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
 	"github.com/google/go-github/github"
@@ -24,8 +23,7 @@ import (
 
 func init() {
 	c = color.New(color.FgGreen, color.Bold)
-	home = os.Getenv("HOME")
-	configFilePath = filepath.Join(home, ".config", "git-push", "git-push-github")
+	configFilePath = utils.GetConfigFilePath()
 	checkCredential()
 }
 
@@ -70,14 +68,14 @@ func (g githubservice) Init() error {
 	s.Suffix = " Authenticating You ⚡"
 	s.Start()
 
-	err = g.authenticateUser(s)
+	err = authenticateUser(s)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (g githubservice) authenticateUser(s *spinner.Spinner) error {
+func authenticateUser(s *spinner.Spinner) error {
 	tp := github.BasicAuthTransport{
 		Username: GithubService.githubUser.Username,
 		Password: GithubService.githubUser.Password,

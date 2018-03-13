@@ -5,12 +5,12 @@ import (
 	"bytes"
 	"errors"
 	"io/ioutil"
-	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/fatih/color"
+	"github.com/urvil38/git-push/utils"
 	"github.com/ktrysmt/go-bitbucket"
 	"github.com/urvil38/git-push/encoding"
 	"github.com/urvil38/git-push/questions"
@@ -21,8 +21,7 @@ import (
 
 func init() {
 	c = color.New(color.FgGreen, color.Bold)
-	home = os.Getenv("HOME")
-	configFilePath = filepath.Join(home, ".config", "git-push", "git-push-bitbucket")
+	configFilePath = utils.GetConfigFilePath()
 	checkCredential()
 }
 
@@ -72,14 +71,14 @@ func (b bitbucketService) Init() error {
 	s.Suffix = " Authenticating You ⚡"
 	s.Start()
 
-	err = b.authenticateUser(s)
+	err = authenticateUser(s)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (b bitbucketService) authenticateUser(s *spinner.Spinner) error {
+func authenticateUser(s *spinner.Spinner) error {
 	client = bitbucket.NewBasicAuth(BitbucketService.bitbucketUser.Username, BitbucketService.bitbucketUser.Password)
 	user, err := client.Users.Get(BitbucketService.bitbucketUser.Username)
 	if user == nil || err != nil {
@@ -119,12 +118,12 @@ func (b bitbucketService) CreateRepo(repo types.Repo) error {
 		s.Stop()
 		return errors.New("Error:Couldn't create repository.Make sure you don't have same repository name on bitbucket or Please check your internet connection ℹ")
 	}
-	err = b.typeCheckHTMLURL(r)
+	err = typeCheckHTMLURL(r)
 	if err != nil {
 		s.Stop()
 		return err
 	}
-	err =b.typeCheckCloneURL(r)
+	err = typeCheckCloneURL(r)
 	if err != nil {
 		s.Stop()
 		return err
@@ -148,7 +147,7 @@ func checkErrCloneURL(ok bool) error {
 	return nil
 }
 
-func (b bitbucketService) typeCheckHTMLURL(r *bitbucket.Repository) error {
+func typeCheckHTMLURL(r *bitbucket.Repository) error {
 	value := r.Links["html"]
 	urls, ok := value.(map[string]interface{})
 	checkErrHTMLURL(ok)
@@ -158,7 +157,7 @@ func (b bitbucketService) typeCheckHTMLURL(r *bitbucket.Repository) error {
 	return nil
 }
 
-func (b bitbucketService) typeCheckCloneURL(r *bitbucket.Repository) error {
+func typeCheckCloneURL(r *bitbucket.Repository) error {
 	value := r.Links["clone"]
 	values, ok := value.([]interface{})
 	checkErrCloneURL(ok)
