@@ -162,12 +162,14 @@ func main() {
 		checkerror(err)
 	case "GitLab":
 		err := service(gitlab.GitlabService,repo)
-		if err != nil {
+		if err.Error() == "giterror" {
+			fmt.Printf("%s\n", red("Error: "+"Please check gitlab username or password are correct"))
 			removeFileErr := os.Remove(filepath.Join(configFolder, "git-push-gitlab"))
 			if removeFileErr != nil {
 				fmt.Printf("%s\n", red("Error: "+removeFileErr.Error()))
 				os.Exit(0)
 			}
+			os.Exit(1)
 		}
 		checkerror(err)
 	}
@@ -186,8 +188,5 @@ func service(service types.Service,repo types.Repo) error {
 		return err
 	}
 
-	if err := service.PushRepo(); err != nil {
-		return err
-	}
-	return nil
+	return service.PushRepo()
 }

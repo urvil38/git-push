@@ -180,5 +180,9 @@ func (g gitlabService) PushRepo() error {
 	userInfo := strings.Split(string(b), "\n")
 	GitlabService.basicUserInfo.Name = userInfo[0]
 	GitlabService.basicUserInfo.Email = userInfo[1]
-	return git.PushRepo(GitlabService.gitlabURL,GitlabService.gitlabUser,GitlabService.basicUserInfo)
+	err = git.PushRepo(GitlabService.gitlabURL,GitlabService.gitlabUser,GitlabService.basicUserInfo)
+	if err != nil {
+		return errors.New("giterror")
+	}
+	return nil
 } 
