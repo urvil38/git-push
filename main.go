@@ -162,6 +162,13 @@ func main() {
 		checkerror(err)
 	case "GitLab":
 		err := service(gitlab.GitlabService,repo)
+		if err != nil {
+			removeFileErr := os.Remove(filepath.Join(configFolder, "git-push-gitlab"))
+			if removeFileErr != nil {
+				fmt.Printf("%s\n", red("Error: "+removeFileErr.Error()))
+				os.Exit(0)
+			}
+		}
 		checkerror(err)
 	}
 }
