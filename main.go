@@ -109,10 +109,6 @@ func main() {
 	}
 
 	err := invokeService(serviceName,repo)
-	checkerror(err)
-}
-
-func checkerror(err error) {
 	if err != nil {
 		fmt.Printf("%s\n", red("=> "+err.Error()))
 		os.Exit(0)
