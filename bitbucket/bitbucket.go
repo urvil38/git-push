@@ -1,27 +1,26 @@
 package bitbucket
 
 import (
-	"github.com/urvil38/git-push/git"
 	"bytes"
 	"errors"
 	"io/ioutil"
-	"path/filepath"
 	"strings"
 	"time"
 
+	"github.com/urvil38/git-push/git"
+	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
-	"github.com/urvil38/git-push/utils"
 	"github.com/ktrysmt/go-bitbucket"
 	"github.com/urvil38/git-push/encoding"
 	"github.com/urvil38/git-push/questions"
 	"github.com/urvil38/git-push/types"
+	"github.com/urvil38/git-push/utils"
 	"gopkg.in/AlecAivazis/survey.v1"
-	"github.com/briandowns/spinner"
 )
 
 func init() {
 	c = color.New(color.FgGreen, color.Bold)
-	configFilePath = utils.GetConfigFilePath()
+	configFilePath = utils.GetConfigFilePath("git-push-bitbucket")
 	checkCredential()
 }
 
@@ -30,17 +29,16 @@ func checkCredential() {
 	if err != nil {
 		return
 	}
-	b = encoding.Decode(string(b))
+	b = encoding.Decode(b)
 	credentials := strings.Split(string(b), "\n")
 	BitbucketService.bitbucketUser.Username = credentials[0]
 	BitbucketService.bitbucketUser.Password = credentials[1]
 }
 
 var (
-	client         *bitbucket.Client
-	configFilePath string
-	home           string
-	c              *color.Color
+	client           *bitbucket.Client
+	configFilePath   string
+	c                *color.Color
 	BitbucketService bitbucketService
 )
 
@@ -50,7 +48,7 @@ var (
 )
 
 type bitbucketService struct {
-	bitbucketURL types.RepoURL
+	bitbucketURL  types.RepoURL
 	bitbucketUser types.BasicAuth
 	basicUserInfo types.BasicUserInfo
 }
@@ -93,7 +91,7 @@ func authenticateUser(s *spinner.Spinner) error {
 
 	sEnc := encoding.Encode(bytes.Bytes())
 
-	err = ioutil.WriteFile(configFilePath, []byte(sEnc), 0555)
+	err = ioutil.WriteFile(configFilePath, sEnc, 0555)
 	if err != nil {
 		return err
 	}
@@ -188,7 +186,7 @@ func (b bitbucketService) CreateGitIgnoreFile() error {
 }
 
 func (b bitbucketService) PushRepo() error {
-	var userConfigFile = filepath.Join(home, ".config", "git-push", "userInfo")
+	var userConfigFile = utils.GetUserConfigFilePath()
 	bytes, err := ioutil.ReadFile(userConfigFile)
 	if err != nil {
 		return err
@@ -196,5 +194,5 @@ func (b bitbucketService) PushRepo() error {
 	userInfo := strings.Split(string(bytes), "\n")
 	BitbucketService.basicUserInfo.Name = userInfo[0]
 	BitbucketService.basicUserInfo.Email = userInfo[1]
-	return git.PushRepo(BitbucketService.bitbucketURL,BitbucketService.bitbucketUser,BitbucketService.basicUserInfo)
+	return git.PushRepo(BitbucketService.bitbucketURL, BitbucketService.bitbucketUser, BitbucketService.basicUserInfo)
 }

@@ -41,7 +41,12 @@ func GetConfigFolderPath() string {
 	return filepath.Join(home, ".config", "git-push")
 }
 
-func GetConfigFilePath() string {
+func GetConfigFilePath(fileName string) string {
+	home := getHomeEnv("HOME")
+	return filepath.Join(home, ".config", "git-push", fileName)
+}
+
+func GetUserConfigFilePath() string {
 	home := getHomeEnv("HOME")
 	return filepath.Join(home, ".config", "git-push", "userInfo")
 }

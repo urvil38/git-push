@@ -6,11 +6,11 @@ import (
 	"log"
 	"os"
 	"strings"
-
+ 
 	"github.com/fatih/color"
-	"github.com/urvil38/git-push/utils"
 	"github.com/urvil38/git-push/questions"
 	"github.com/urvil38/git-push/types"
+	"github.com/urvil38/git-push/utils"
 	"gopkg.in/AlecAivazis/survey.v1"
 )
 
@@ -18,7 +18,7 @@ func init() {
 	red = color.New(color.FgRed, color.Bold).SprintFunc()
 	yellow = color.New(color.FgYellow, color.Bold).SprintFunc()
 
-	userConfigFile = utils.GetConfigFilePath()
+	userConfigFile = utils.GetUserConfigFilePath()
 	configFolder = utils.GetConfigFolderPath()
 
 	err := utils.CreateDir(configFolder)
@@ -108,7 +108,7 @@ func main() {
 		}
 	}
 
-	err := invokeService(serviceName,repo)
+	err = invokeService(serviceName, repo)
 	if err != nil {
 		fmt.Printf("%s\n", red("=> "+err.Error()))
 		os.Exit(0)

@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -23,7 +22,7 @@ import (
 
 func init() {
 	c = color.New(color.FgGreen, color.Bold)
-	configFilePath = utils.GetConfigFilePath()
+	configFilePath = utils.GetConfigFilePath("git-push-github")
 	checkCredential()
 }
 
@@ -32,14 +31,13 @@ func checkCredential() {
 	if err != nil {
 		return
 	}
-	b = encoding.Decode(string(b))
+	b = encoding.Decode(b)
 	credentials := strings.Split(string(b), "\n")
 	GithubService.githubUser.Username = credentials[0]
 	GithubService.githubUser.Password = credentials[1]
 }
 
 var (
-	home           string
 	client         *github.Client
 	configFilePath string
 	c              *color.Color
@@ -95,7 +93,7 @@ func authenticateUser(s *spinner.Spinner) error {
 
 	sEnc := encoding.Encode(b.Bytes())
 
-	err = ioutil.WriteFile(configFilePath, []byte(sEnc), 0555)
+	err = ioutil.WriteFile(configFilePath, sEnc, 0555)
 	if err != nil {
 		return err
 	}
@@ -153,7 +151,7 @@ func (g githubservice) CreateGitIgnoreFile() error {
 }
 
 func (g githubservice) PushRepo() error {
-	var userConfigFile = filepath.Join(home, ".config", "git-push", "userInfo")
+	var userConfigFile = utils.GetUserConfigFilePath()
 	b, err := ioutil.ReadFile(userConfigFile)
 	if err != nil {
 		return err

@@ -1,13 +1,12 @@
 package gitlab
 
 import (
+	"github.com/urvil38/git-push/utils"
 	"github.com/urvil38/git-push/git"
 	"bytes"
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"os"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -22,8 +21,7 @@ import (
 
 func init() {
 	c = color.New(color.FgGreen, color.Bold)
-	home = os.Getenv("HOME")
-	configFilePath = filepath.Join(home, ".config", "git-push", "git-push-gitlab")
+	configFilePath = utils.GetConfigFilePath("git-push-gitlab")
 	checkCredential()
 }
 
@@ -32,7 +30,7 @@ func checkCredential() {
 	if err != nil {
 		return
 	}
-	b = encoding.Decode(string(b))
+	b = encoding.Decode(b)
 	credentials := strings.Split(string(b), "\n")
 	GitlabService.gitlabToken.Token = credentials[0]
 	GitlabService.gitlabUser.Username = credentials[1]
@@ -41,7 +39,6 @@ func checkCredential() {
 
 var (
 	client         *gitlab.Client
-	home           string
 	configFilePath string
 	c              *color.Color
 	GitlabService gitlabService
@@ -126,7 +123,7 @@ func authenticateUser(user *gitlab.User) error {
 
 	Estr := encoding.Encode(b.Bytes())
 
-	err := ioutil.WriteFile(configFilePath, []byte(Estr), 0555)
+	err := ioutil.WriteFile(configFilePath, Estr, 0555)
 	if err != nil {
 		return err
 	}
@@ -172,7 +169,7 @@ func (g gitlabService) CreateGitIgnoreFile() error {
 }
 
 func (g gitlabService) PushRepo() error {
-	var userConfigFile = filepath.Join(home, ".config", "git-push", "userInfo")
+	var userConfigFile = utils.GetUserConfigFilePath()
 	b, err := ioutil.ReadFile(userConfigFile)
 	if err != nil {
 		return err
