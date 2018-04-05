@@ -9,14 +9,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/urvil38/git-push/git"
-	"github.com/urvil38/git-push/utils"
 	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
 	"github.com/google/go-github/github"
 	"github.com/urvil38/git-push/encoding"
+	"github.com/urvil38/git-push/git"
 	"github.com/urvil38/git-push/questions"
 	"github.com/urvil38/git-push/types"
+	"github.com/urvil38/git-push/utils"
 	"gopkg.in/AlecAivazis/survey.v1"
 )
 
@@ -116,7 +116,7 @@ func (g githubservice) CreateRepo(repo types.Repo) error {
 
 	s := spinner.New(spinner.CharSets[11], 50*time.Millisecond)
 	s.Color("yellow")
-	s.Suffix = " Fetching Repo URL from githubservice ⚡"
+	s.Suffix = " Fetching Repo URL from Github ⚡"
 	s.Start()
 
 	repository, _, err := client.Repositories.Create(ctx, "", r)
