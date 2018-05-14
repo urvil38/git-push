@@ -124,3 +124,20 @@ func GitAddAll() error {
 	}
 	return nil
 }
+
+func ResetAccount(reset string) error {
+	if reset == "all" {
+		err := os.RemoveAll(GetConfigFolderPath())
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	filename := "git-push-"+reset
+	err := os.Remove(GetConfigFilePath(filename))
+	if err != nil {
+		return err
+	}
+	return nil
+}

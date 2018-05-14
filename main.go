@@ -1,12 +1,13 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"strings"
- 
+
 	"github.com/fatih/color"
 	"github.com/urvil38/git-push/questions"
 	"github.com/urvil38/git-push/types"
@@ -17,6 +18,23 @@ import (
 func init() {
 	red = color.New(color.FgRed, color.Bold).SprintFunc()
 	yellow = color.New(color.FgYellow, color.Bold).SprintFunc()
+	green = color.New(color.FgGreen, color.Bold).SprintFunc()
+
+	reset := flag.String("reset", "", "Use for Resetting Account, Equivalent to Logout\nExample: git-push -reset [github | bitbucket | gitlab | all]")
+	flag.Parse()
+	if *reset != "" {
+		reset := strings.ToLower(*reset)
+		err := utils.ResetAccount(reset)
+		if err != nil {
+			_, ok := err.(*os.PathError)
+			if ok {
+				fmt.Printf("%s\n", red("Cound't Reset Account.You are not Logged in to "+reset+" Account"))
+			}
+			os.Exit(0)
+		}
+		fmt.Printf("%s\n", green("Successfully Reset "+reset+" Account"))
+		os.Exit(0)
+	}
 
 	userConfigFile = utils.GetUserConfigFilePath()
 	configFolder = utils.GetConfigFolderPath()
@@ -58,6 +76,7 @@ var (
 	version        string
 	red            func(...interface{}) string
 	yellow         func(...interface{}) string
+	green          func(...interface{}) string
 )
 
 const (
@@ -77,6 +96,7 @@ const (
 )
 
 func main() {
+
 
 	fmt.Printf("%s\n", yellow(fmt.Sprintf(banner, version)))
 
