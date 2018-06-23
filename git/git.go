@@ -85,7 +85,14 @@ func PushRepo(gitURL types.RepoURL, user types.BasicAuth, basicUserInfo types.Ba
 			return err
 		}
 
-		_, err = w.Commit("Initial Commit", &gogit.CommitOptions{
+		var commitMessage string
+
+		err = survey.Ask(questions.CommitMessage,&commitMessage)
+		if err != nil {
+			return err
+		}
+
+		_, err = w.Commit(commitMessage, &gogit.CommitOptions{
 			Author: &object.Signature{
 				Name:  basicUserInfo.Name,
 				Email: basicUserInfo.Email,

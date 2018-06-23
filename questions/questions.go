@@ -147,3 +147,14 @@ var CreateGitIgnore = []*survey.Question{
 		},
 	},
 }
+
+var CommitMessage = []*survey.Question{
+	{
+		Name: "commitMessage",
+		Prompt: &survey.Input{
+			Message: "Commit Message: ",
+			Default: "Initial Commit",
+		},
+		Validate: survey.Required,
+	},
+}
