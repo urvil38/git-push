@@ -51,7 +51,7 @@ type gitlabService struct {
 	gitlabURL types.RepoURL
 }
 
-func (g gitlabService) Init() error {
+func (g gitlabService) Authenticate() error {
 
 	if GitlabService.gitlabToken.Token != "" || GitlabService.gitlabUser.Username != "" || GitlabService.gitlabUser.Password != "" {
 		c.Println("=> You authenticated successfully ✓")

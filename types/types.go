@@ -27,7 +27,7 @@ type RepoURL struct {
 }
 
 type Service interface {
-	Init() error
+	Authenticate() error
 	CreateRepo(Repo) error
 	CreateGitIgnoreFile() error
 	PushRepo() error

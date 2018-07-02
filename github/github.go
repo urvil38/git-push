@@ -51,7 +51,7 @@ type githubservice struct {
 }
 
 //Init function ask for github username and password for basic auth
-func (g githubservice) Init() error {
+func (g githubservice) Authenticate() error {
 	if GithubService.githubUser.Username != "" || GithubService.githubUser.Password != "" {
 		c.Println("=> You authenticated successfully ✓")
 		return nil

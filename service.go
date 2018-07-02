@@ -14,7 +14,7 @@ import (
 )
 
 func service(service types.Service, repo types.Repo) error {
-	if err := service.Init(); err != nil {
+	if err := service.Authenticate(); err != nil {
 		return err
 	}
 

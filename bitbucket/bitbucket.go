@@ -53,7 +53,7 @@ type bitbucketService struct {
 	basicUserInfo types.BasicUserInfo
 }
 
-func (b bitbucketService) Init() error {
+func (b bitbucketService) Authenticate() error {
 
 	if BitbucketService.bitbucketUser.Username != "" || BitbucketService.bitbucketUser.Password != "" {
 		c.Println("=> You authenticated successfully ✓")
