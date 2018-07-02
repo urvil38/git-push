@@ -1,7 +1,7 @@
 # Git- Push
 #### `git-push` is a cli tool for absolute beginner of github and git to push repo on github by no efforts.
 
-![git-push gif](https://drive.google.com/file/d/1y0GiJVBatrzesHH8Reik0CFUTKKAgX7-/view?usp=sharing)
+![git-push gif]()
 
 - If you want to build git-push right away ,you need a working [Go environment](https://golang.org/doc/install).
 ```
