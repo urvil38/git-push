@@ -1,5 +1,5 @@
 node_modules
 *.gem
 *.rbc
-encoding/
 Makefile
+encoding/key.go
