@@ -10,6 +10,8 @@ import (
 	"io"
 )
 
+const key = "2f734137aea51c28be6e244e3ca174d4"
+
 func Encode(b []byte) []byte {
 	Estr, err := encrypt([]byte(key), b)
 	if err != nil {

@@ -3,11 +3,11 @@
 
 ![git-push gif](https://github.com/urvil38/git-push/blob/master/git-push-gif/git-push.gif)
 
-- If you want to build git-push right away ,you need a working [Go environment](https://golang.org/doc/install).
+- If you want to build git-push right away ,you need a working [Go environment](https://golang.org/doc/install) and [dep](https://github.com/golang/dep).
 ```
-$ go get github.com/urvil38/git-push
+$ git clone https://github.com/urvil38/git-push.git
+$ dep ensure
 $ go install
-$ go build
 ```
 
 # Downloads
