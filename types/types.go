@@ -39,7 +39,7 @@ type RepoURL struct {
 	SSHURL string
 }
 
-//Service interface for all things to do in order to push repository in selected provider
+//Service interface define functions which are used to push repository to selected provider selected by user
 type Service interface {
 	//Authenticate with client using methods they support.
 	//Github and Bitbucket require username and password as authentication mechanism
@@ -47,11 +47,11 @@ type Service interface {
 	Authenticate() error
 
 	//CreateRepo creates empty repository using appropriate client choosen by user
-	//Ex:If user select github then It uses github client to create empty repository based on information given by CreateRepo() function
+	//Ex:If user select github then It uses github client to create empty repository based on information of Repository using Repo struct
 	CreateRepo(Repo) error
 
 	//It ask user if he/she want's to add .gitignore file
-	//If current folder has already .gitignore file this function do not ask for he/she want to ignore
+	//If current folder has already .gitignore file this function do nothing
 	CreateGitIgnoreFile() error
 
 	//PushRepo push current folder to remote repository on selected service
