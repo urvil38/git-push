@@ -32,7 +32,7 @@ type Repo struct {
 //Ex: html:  https://github.com/urvil38/git-push ,for HTML page which user can directly open in browser
 //Ex: clone: https://github.com/urvil38/git-push.git ,setup remote repo as cloneURL created by 
 //Ex: ssh:   git@github.com:urvil38/git-push.git ,right now ssh is not supported as authentication mechanism
-//TODO: Support ssh for authentication mechanism
+//TODO(Urvil Patel): Support ssh as a authentication mechanism
 type RepoURL struct {
 	HTMLURL string
 	CloneURL string
@@ -51,7 +51,7 @@ type Service interface {
 	CreateRepo(Repo) error
 
 	//It ask user if he/she want's to add .gitignore file
-	//If current folder has already .gitignore file this function do nothing
+	//If current folder has already .gitignore file in that case this function do nothing
 	CreateGitIgnoreFile() error
 
 	//PushRepo push current folder to remote repository on selected service
