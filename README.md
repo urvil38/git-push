@@ -1,5 +1,5 @@
 # Git- Push
-#### `git-push` is a cli tool help to initialize and push to github or gitlab or bitbucket by no efforts.
+#### `git-push` is a cli tool help to initialize and push git repository to github or gitlab or bitbucket by no efforts.
 
 ![git-push gif](https://github.com/urvil38/git-push/blob/master/git-push-gif/git-push.gif)
 
