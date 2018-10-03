@@ -1,7 +1,7 @@
 # Git- Push
 #### `git-push` is a cli tool help to initialize and push git repository to github or gitlab or bitbucket by no efforts.
 
-<script src="https://asciinema.org/a/204260.js" id="asciicast-204260" async></script>
+[![asciicast](https://asciinema.org/a/204260.png)](https://asciinema.org/a/204260)
 
 - If you want to build git-push right away ,you need a working [Go environment](https://golang.org/doc/install) and [dep](https://github.com/golang/dep).
 ```
