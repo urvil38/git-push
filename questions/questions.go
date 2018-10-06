@@ -141,7 +141,7 @@ var CreateGitIgnore = []*survey.Question{
 		Name: "gitignorefile",
 		Prompt: &survey.Editor{
 			Message:       "Please add files you want to ignore for git",
-			Default:       "node_modules\n*.gem\n*.rbc\n.vscode\n.idea\n",
+			Default:       "node_modules\n*.gem\n*.rbc\n.vscode\n.idea\n.DS_Store",
 			HideDefault:   true,
 			AppendDefault: true,
 		},
